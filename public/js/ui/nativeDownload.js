@@ -91,9 +91,9 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     if (src.includes("snapchat")) return "Snapchat";
     return "Media";
   })();
-  if (window._moriActiveSimInterval) {
-    clearInterval(window._moriActiveSimInterval);
-    window._moriActiveSimInterval = null;
+  if (window._rysavActiveSimInterval) {
+    clearInterval(window._rysavActiveSimInterval);
+    window._rysavActiveSimInterval = null;
   }
 
   showDownloadProgressToast(platformLabel, type);
@@ -133,7 +133,7 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     // Smooth adaptive progress animation up to 95% until download completes
     let simProgress = 0;
     let realProgressReceived = false;
-    window._moriActiveSimInterval = setInterval(() => {
+    window._rysavActiveSimInterval = setInterval(() => {
       if (realProgressReceived) return;
       if (simProgress < 50) {
         simProgress += 6 + Math.random() * 4;
@@ -147,17 +147,17 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     }, 160);
 
     // Remove any existing listeners first to avoid double-firing
-    if (window._moriProgressListener) {
+    if (window._rysavProgressListener) {
       try {
-        await window._moriProgressListener.remove();
+        await window._rysavProgressListener.remove();
       } catch (_) {}
-      window._moriProgressListener = null;
+      window._rysavProgressListener = null;
     }
 
     // Listen for real progress if Filesystem exists
     if (Filesystem?.addListener) {
       try {
-        window._moriProgressListener = await Filesystem.addListener(
+        window._rysavProgressListener = await Filesystem.addListener(
           "downloadProgress",
           (progress) => {
             realProgressReceived = true;
@@ -198,7 +198,7 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
       .trim();
     const isTrackType = /^\d+\.\s+/.test(cleanTypeLabel);
 
-    let effectiveTitle = title || "Mori Media";
+    let effectiveTitle = title || "RYSAV Media";
     if (isTrackType) {
       effectiveTitle = cleanTypeLabel.replace(/^\d+\.\s+/, "").trim() || cleanTypeLabel;
     }
@@ -210,9 +210,9 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
       .replace(/\s+/g, " ")
       .substring(0, 60);
 
-    if (!sanitizedTitle) sanitizedTitle = "Mori_Media";
+    if (!sanitizedTitle) sanitizedTitle = "RYSAV_Media";
 
-    const template = localStorage.getItem("mori_filename") || "title";
+    const template = localStorage.getItem("rysav_filename") || "title";
     let fileName = `${sanitizedTitle}.${ext}`;
 
     if (template === "title-platform") {
@@ -241,16 +241,16 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
       fileName = `${sanitizedTitle}_${Date.now()}.${ext}`;
     }
 
-    const videoSubfolder = localStorage.getItem("mori_download_path") || "Mori";
+    const videoSubfolder = localStorage.getItem("rysav_download_path") || "RYSAV";
     const musicSubfolder =
-      localStorage.getItem("mori_music_path") || "Mori/Music";
+      localStorage.getItem("rysav_music_path") || "RYSAV/Music";
     const targetFolder = isAudio ? musicSubfolder : videoSubfolder;
     let fullPath = isAudio
       ? `Download/${musicSubfolder}`
       : `Download/${videoSubfolder}`;
 
     // Auto-Categorize Subfolder per Platform
-    if (localStorage.getItem("mori_auto_folder") === "true") {
+    if (localStorage.getItem("rysav_auto_folder") === "true") {
       const src = (sourceUrl || url || "").toLowerCase();
       let platformFolder = "Other";
       if (
@@ -611,7 +611,7 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
 
     let savedFile;
     let attempts = 0;
-    const isAutoRetry = localStorage.getItem("mori_auto_retry") !== "false";
+    const isAutoRetry = localStorage.getItem("rysav_auto_retry") !== "false";
     const maxAttempts = isAutoRetry ? 3 : 1;
 
     if (tauriInvoke) {
@@ -647,9 +647,9 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
               await new Promise((r) => setTimeout(r, 1000));
             }
             const isBypassSsl =
-              localStorage.getItem("mori_bypass_ssl") === "true";
+              localStorage.getItem("rysav_bypass_ssl") === "true";
             const isForceIpv4 =
-              localStorage.getItem("mori_force_ipv4") === "true";
+              localStorage.getItem("rysav_force_ipv4") === "true";
 
             const dlOpts = {
               url: actualDownloadUrl,
@@ -708,9 +708,9 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
       );
     }
 
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._rysavActiveSimInterval) {
+      clearInterval(window._rysavActiveSimInterval);
+      window._rysavActiveSimInterval = null;
     }
     updateProgress(100, "Downloading...");
     if (btn) {
@@ -746,7 +746,7 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     }
 
     window.dispatchEvent(
-      new CustomEvent("mori_file_saved", {
+      new CustomEvent("rysav_file_saved", {
         detail: { url: sourceUrl || url, path: savedFile.path, uri: savedUri, title: effectiveTitle },
       }),
     );
@@ -775,9 +775,9 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     }, 2500);
   } catch (err) {
     console.error("Download failed", err);
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._rysavActiveSimInterval) {
+      clearInterval(window._rysavActiveSimInterval);
+      window._rysavActiveSimInterval = null;
     }
     let errorMsg = err?.message || "Download failed";
     if (
@@ -805,13 +805,13 @@ export async function startNativeDownload(url, type, title, btn, sourceUrl) {
     if (progressContainer) progressContainer.classList.add("hidden");
   } finally {
     releaseWakeLock();
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._rysavActiveSimInterval) {
+      clearInterval(window._rysavActiveSimInterval);
+      window._rysavActiveSimInterval = null;
     }
-    if (window._moriProgressListener) {
-      await window._moriProgressListener.remove();
-      window._moriProgressListener = null;
+    if (window._rysavProgressListener) {
+      await window._rysavProgressListener.remove();
+      window._rysavProgressListener = null;
     }
   }
 }

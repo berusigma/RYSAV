@@ -32,7 +32,7 @@ export const UA_PRESETS = {
 export const SAFARI_MOBILE_UA = UA_PRESETS.safari;
 
 export function getUserAgent() {
-  const mode = localStorage.getItem("mori_user_agent") || "default";
+  const mode = localStorage.getItem("rysav_user_agent") || "default";
   return UA_PRESETS[mode] || UA_PRESETS.default;
 }
 
@@ -115,7 +115,7 @@ export function truncate(str, num = 80) {
 }
 
 export function autoClearInputBox() {
-  if (localStorage.getItem("mori_auto_clear_input") === "true") {
+  if (localStorage.getItem("rysav_auto_clear_input") === "true") {
     const urlInput = document.getElementById("urlInput");
     const batchUrlInput = document.getElementById("batchUrlInput");
     const clearBtn = document.getElementById("clearBtn");
@@ -274,7 +274,7 @@ export function hideDownloadProgressToast(delay = 800) {
 
 // Haptic Feedback Helper
 export async function triggerHaptic(type = "medium") {
-  if (localStorage.getItem("mori_haptic") === "false") return;
+  if (localStorage.getItem("rysav_haptic") === "false") return;
   try {
     const HapticsPlugin = window.Capacitor?.Plugins?.Haptics || Haptics;
     if (HapticsPlugin && window.Capacitor?.isNativePlatform?.()) {
@@ -454,7 +454,7 @@ if (typeof window !== "undefined") {
 
 export function playCompletionSound() {
   const isSoundEnabled =
-    localStorage.getItem("mori_download_sound") !== "false";
+    localStorage.getItem("rysav_download_sound") !== "false";
   if (!isSoundEnabled) return;
 
   // Single clean chime playback via local audio asset
@@ -524,7 +524,7 @@ export async function getNetworkStatus() {
 }
 
 export async function checkWifiOnlyGuard() {
-  const isWifiOnly = localStorage.getItem("mori_wifi_only") === "true";
+  const isWifiOnly = localStorage.getItem("rysav_wifi_only") === "true";
   if (!isWifiOnly) return true; // Allowed
 
   const status = await getNetworkStatus();
@@ -541,7 +541,7 @@ export async function checkWifiOnlyGuard() {
 let wakeLockSentinel = null;
 export async function requestWakeLock() {
   if (
-    localStorage.getItem("mori_keep_awake") === "true" &&
+    localStorage.getItem("rysav_keep_awake") === "true" &&
     "wakeLock" in navigator
   ) {
     try {

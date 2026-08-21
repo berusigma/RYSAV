@@ -1,4 +1,4 @@
-package com.mori.downloader;
+package com.rysav.downloader;
  
 import android.content.Intent;
 import android.net.Uri;
@@ -76,8 +76,8 @@ public class MainActivity extends BridgeActivity {
                     getBridge().getWebView().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            getBridge().getWebView().evaluateJavascript("window.moriShareText = '" + escapedText + "';", null);
-                            getBridge().triggerWindowJSEvent("moriShareIntent", "{ \"text\": \"" + escapedText + "\" }");
+                            getBridge().getWebView().evaluateJavascript("window.rysavShareText = '" + escapedText + "';", null);
+                            getBridge().triggerWindowJSEvent("rysavShareIntent", "{ \"text\": \"" + escapedText + "\" }");
                         }
                     }, 1000);
                 }

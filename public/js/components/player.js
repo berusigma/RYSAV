@@ -7,7 +7,7 @@ import {
 import { translations } from "../i18n/index.js";
 
 /**
- * Creates a custom video player element with all MoriPlayer controls.
+ * Creates a custom video player element with all RysavPlayer controls.
  * @param {Object} dl - Download item with url, type, thumbnail properties.
  * @param {number} index - Slide index (0-based).
  * @param {string} resultThumbnail - Fallback thumbnail URL.
@@ -16,7 +16,7 @@ import { translations } from "../i18n/index.js";
 
 export function createVideoPlayer(dl, index, resultThumbnail) {
   const playerContainer = document.createElement("div");
-  playerContainer.className = "mori-player-container";
+  playerContainer.className = "rysav-player-container";
   playerContainer.style.backgroundColor = "black";
   playerContainer.style.display = "flex";
   playerContainer.style.alignItems = "center";
@@ -97,7 +97,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     if (fallbackImg) fallbackImg.remove();
   };
   const removeLoading = () => {
-    playerContainer.classList.remove("mori-loading");
+    playerContainer.classList.remove("rysav-loading");
     removeFallbackImg();
   };
 
@@ -112,7 +112,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     window.__TAURI__?.convertFileSrc;
 
   if (isLocal && (isNative || tauriConvertFileSrc || tauriInvoke)) {
-    playerContainer.classList.add("mori-loading");
+    playerContainer.classList.add("rysav-loading");
     let cleanPath = videoUrl || dl.rawPath || dl.rawUri;
 
     if (cleanPath.startsWith("content://")) {
@@ -182,7 +182,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   }
 
   if (needsBypass) {
-    playerContainer.classList.add("mori-loading");
+    playerContainer.classList.add("rysav-loading");
 
     let referer = "https://www.google.com/";
     let ua =
@@ -230,7 +230,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
               playerContainer.parentElement &&
               playerContainer.parentElement.classList.contains("active");
             const autoPlaySetting =
-              localStorage.getItem("mori_autoplay") !== "false";
+              localStorage.getItem("rysav_autoplay") !== "false";
             if (
               (index === 0 || isCurrentActiveSlide) &&
               autoPlaySetting &&
@@ -265,7 +265,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
               playerContainer.parentElement &&
               playerContainer.parentElement.classList.contains("active");
             const autoPlaySetting =
-              localStorage.getItem("mori_autoplay") !== "false";
+              localStorage.getItem("rysav_autoplay") !== "false";
             if (
               (index === 0 || isCurrentActiveSlide) &&
               autoPlaySetting &&
@@ -290,10 +290,10 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     video.src = videoUrl;
   }
 
-  const loopSetting = localStorage.getItem("mori_loop") !== "false";
+  const loopSetting = localStorage.getItem("rysav_loop") !== "false";
   video.loop = loopSetting;
   video.preload = index === 0 ? "auto" : "metadata";
-  const autoPlaySetting = localStorage.getItem("mori_autoplay") !== "false";
+  const autoPlaySetting = localStorage.getItem("rysav_autoplay") !== "false";
   video.autoplay = index === 0 && autoPlaySetting;
   video.playsInline = true;
   video.setAttribute("playsinline", "true");
@@ -325,9 +325,9 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     video.poster = posterThumb;
   }
 
-  playerContainer.classList.add("mori-loading");
+  playerContainer.classList.add("rysav-loading");
 
-  video.onwaiting = () => playerContainer.classList.add("mori-loading");
+  video.onwaiting = () => playerContainer.classList.add("rysav-loading");
   video.onplaying = removeLoading;
   video.oncanplay = removeLoading;
   video.onloadeddata = removeLoading;
@@ -439,11 +439,11 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
     removeLoading();
     if (bigPlay && bigPlay.parentNode) bigPlay.remove();
-    const ctrlEl = playerContainer.querySelector(".mori-player-controls");
+    const ctrlEl = playerContainer.querySelector(".rysav-player-controls");
     if (ctrlEl) ctrlEl.remove();
 
     if (
-      !playerContainer.querySelector(".mori-player-error") &&
+      !playerContainer.querySelector(".rysav-player-error") &&
       !playerContainer.querySelector(".fallback-img")
     ) {
       const fallbackSrc = posterThumb || dl.thumbnail || resultThumbnail || "";
@@ -459,7 +459,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
         playerContainer.appendChild(fbImg);
       } else {
         const errOverlay = document.createElement("div");
-        errOverlay.className = "mori-player-error";
+        errOverlay.className = "rysav-player-error";
         errOverlay.style.position = "absolute";
         errOverlay.style.top = "0";
         errOverlay.style.left = "0";
@@ -490,31 +490,31 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   playerContainer.appendChild(video);
 
   const bigPlay = document.createElement("div");
-  bigPlay.className = "mori-player-big-play visible";
+  bigPlay.className = "rysav-player-big-play visible";
   bigPlay.style.cursor = "pointer";
   bigPlay.innerHTML = `<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
   playerContainer.appendChild(bigPlay);
 
   const controls = document.createElement("div");
-  controls.className = "mori-player-controls";
+  controls.className = "rysav-player-controls";
   controls.innerHTML = `
-    <div class="mori-player-progress">
-      <div class="mori-player-progress-inner"></div>
+    <div class="rysav-player-progress">
+      <div class="rysav-player-progress-inner"></div>
     </div>
-    <div class="mori-player-bottom">
-      <div class="mori-player-actions">
-        <button class="mori-player-btn play-toggle">
+    <div class="rysav-player-bottom">
+      <div class="rysav-player-actions">
+        <button class="rysav-player-btn play-toggle">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="pause-icon hidden"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
-        <span class="mori-player-time">0:00 / 0:00</span>
+        <span class="rysav-player-time">0:00 / 0:00</span>
       </div>
-      <div class="mori-player-actions">
-        <button class="mori-player-btn mute-toggle">
+      <div class="rysav-player-actions">
+        <button class="rysav-player-btn mute-toggle">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="unmute-icon"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="mute-icon hidden"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.58.45-1.24.8-1.95.99v2.06c1.26-.26 2.4-.83 3.37-1.62l3.06 3.06L21 21.73l-16.73-16.73zM12 4L9.91 6.09 12 8.18V4z"/></svg>
         </button>
-        <button class="mori-player-btn fullscreen-btn">
+        <button class="rysav-player-btn fullscreen-btn">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
         </button>
       </div>
@@ -526,9 +526,9 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   const playBtn = controls.querySelector(".play-toggle");
   const playIcon = playBtn.querySelector(".play-icon");
   const pauseIcon = playBtn.querySelector(".pause-icon");
-  const timeDisplay = controls.querySelector(".mori-player-time");
-  const prog = controls.querySelector(".mori-player-progress");
-  const progInner = controls.querySelector(".mori-player-progress-inner");
+  const timeDisplay = controls.querySelector(".rysav-player-time");
+  const prog = controls.querySelector(".rysav-player-progress");
+  const progInner = controls.querySelector(".rysav-player-progress-inner");
   const muteBtn = controls.querySelector(".mute-toggle");
   const unmuteIcon = muteBtn.querySelector(".unmute-icon");
   const muteIcon = muteBtn.querySelector(".mute-icon");
@@ -565,7 +565,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   const togglePlay = (e) => {
     if (e) e.stopPropagation();
     if (video.paused) {
-      video.loop = localStorage.getItem("mori_loop") !== "false";
+      video.loop = localStorage.getItem("rysav_loop") !== "false";
       video.play().catch((err) => {
         console.warn("video.play() failed:", err);
       });

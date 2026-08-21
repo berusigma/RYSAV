@@ -1,21 +1,21 @@
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="Mori Logo">
+  <img src="assets/icon.png" width="128" alt="RYSAV Logo">
 </p>
 
-<h1 align="center">Mori</h1>
+<h1 align="center">RYSAV</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-v4.2.2-brown?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/github/downloads/coflyn/Mori/total?style=flat-square&color=blue" alt="Downloads">
-  <img src="https://img.shields.io/github/stars/coflyn/Mori?style=flat-square&color=gold" alt="Stars">
-  <img src="https://img.shields.io/github/repo-size/coflyn/Mori?style=flat-square&color=purple" alt="Repo Size">
+  <img src="https://img.shields.io/github/downloads/coflyn/RYSAV/total?style=flat-square&color=blue" alt="Downloads">
+  <img src="https://img.shields.io/github/stars/coflyn/RYSAV?style=flat-square&color=gold" alt="Stars">
+  <img src="https://img.shields.io/github/repo-size/coflyn/RYSAV?style=flat-square&color=purple" alt="Repo Size">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
 </p>
 
 <div align="center">
 
-Mori is a fast and simple downloader for saving videos, photos, and music from 14 popular social media apps. Everything works directly on your device without any external servers or tracking — giving you total privacy and zero ads.
+RYSAV is a fast and simple downloader for saving videos, photos, and music from 14 popular social media apps. Everything works directly on your device without any external servers or tracking — giving you total privacy and zero ads.
 
 </div>
 
@@ -36,7 +36,7 @@ Mori is a fast and simple downloader for saving videos, photos, and music from 1
 
 - **History Item Deletion Fix**: Resolved an issue where deleting an item from the download history inadvertently deleted the original media file from physical device storage. History deletion now strictly clears the app history record while leaving saved files in storage completely untouched.
 - **Batch Mode Playlist & Album Skipping**: Configured Batch Mode to automatically detect and skip full playlist and album URLs (Spotify, Apple Music, YouTube playlists). Skipped items display a distinct `SKIPPED (PLAYLIST)` badge in the batch queue modal.
-- **Batch History Isolation & URL Match Fix**: Resolved an issue where downloading multiple links in Batch Mode (such as multiple TikTok, IG, or Twitter posts) caused saved files to mistakenly merge into a single history card. Removed inaccurate index fallback logic in `mori_file_saved` listener and added `sourceUrl` tracking to guarantee that each downloaded media file is mapped and isolated strictly to its own separate history item.
+- **Batch History Isolation & URL Match Fix**: Resolved an issue where downloading multiple links in Batch Mode (such as multiple TikTok, IG, or Twitter posts) caused saved files to mistakenly merge into a single history card. Removed inaccurate index fallback logic in `rysav_file_saved` listener and added `sourceUrl` tracking to guarantee that each downloaded media file is mapped and isolated strictly to its own separate history item.
 - **Spotify & Apple Music Playlist / Album Support**: Full support for parsing and downloading entire playlists and albums from Spotify (via SpotiDown & SoundLoaders) and Apple Music (via Aplmate).
 - **UI Simplification & Quote/Tagline Removal**: Streamlining the application interface by removing the header description ("Minimalist Media Downloader"), Home greeting/stats ("Ready to save?" / history item counter), and footer quote tagline ("Simplicity is the ultimate sophistication"), as well as removing their redundant toggles (_Header Quote_, _Home Greeting_, _Footer Tagline_) from Settings Appearance for an ultra-clean design.
 - **Auto-Download Feature Fix**: Resolved an issue where the Auto-Download setting never triggered because the click automation searched for a legacy button class (`.btn-download`) instead of the actual rendered class (`.dl-item`). Auto-Download now correctly fires the first download button after analysis.
@@ -62,7 +62,7 @@ Mori is a fast and simple downloader for saving videos, photos, and music from 1
   2. `Combine into Single PDF`: Merges all slide photos of a carousel into a single multi-page PDF document using `pdf-lib`.
   3. `Download First Photo Only`: Downloads only the 1st cover photo of the carousel post.
 - **Smart Media Type Differentiation**: Batch mode intelligently distinguishes single video posts (such as TikTok videos with SD, HD, and MP3 quality mirrors) from genuine photo slideshow carousels, ensuring video posts download only 1 primary video file while carousel posts apply the user's selected Batch Photo Mode.
-- **100% 14-Platform Subfolder Coverage**: Enhanced per-platform auto-categorization (`mori_auto_folder`) to cover all 14 supported social media platforms and short link domains (TikTok/Douyin, Instagram, YouTube, Twitter/X, Facebook, Pinterest, Spotify, Apple Music, Threads, RedNote, Bilibili, Pixiv, and Bandcamp), ensuring downloaded files are routed into dedicated platform folders (`/TikTok`, `/AppleMusic`, `/Threads`, `/Bandcamp`, etc.).
+- **100% 14-Platform Subfolder Coverage**: Enhanced per-platform auto-categorization (`rysav_auto_folder`) to cover all 14 supported social media platforms and short link domains (TikTok/Douyin, Instagram, YouTube, Twitter/X, Facebook, Pinterest, Spotify, Apple Music, Threads, RedNote, Bilibili, Pixiv, and Bandcamp), ensuring downloaded files are routed into dedicated platform folders (`/TikTok`, `/AppleMusic`, `/Threads`, `/Bandcamp`, etc.).
 - **4-Digit PIN Passcode Lock System**: Added `PIN Code` as a brand new Lock Type option alongside Biometric. Includes a sleek, custom-built 4-dot monochrome keypad modal for passcode entry, creation, and confirmation. Works cross-platform on Desktop (macOS & Windows) as well as Android and iOS devices. Automatically adapts to Desktop by displaying `None` and `PIN Code` while hiding native mobile biometric options.
 - **Audio Background Playback Fix**: Resolved an issue where audio previews (MP3/Spotify/Apple Music) continued playing in the background after closing modal details or preview cards. Implemented centralized `stopAllMedia()` helper to pause and reset both `<audio>` and `<video>` elements, revoke Object URLs, and trigger container cleanup hooks upon closing modals (`hideModal`), closing result cards (`closeResult`), or switching navigation tabs (`switchPage`).
 - **Pinterest PinDirect Removal**: Completely removed PinDirect server option and server selection popup for Pinterest, streamlining execution to use PinDown directly with automatic direct page fallback.
@@ -72,12 +72,12 @@ Mori is a fast and simple downloader for saving videos, photos, and music from 1
 - **Twitter/X Scraper (TVD) Resolution Label Fix**: Enhanced resolution label parser (`formatResolutionLabel`) to filter out "Get Premium" upsell text and dynamically extract resolution dimensions (`720x1280`, `1080x1920`, etc.) directly from Twitter CDN media URLs.
 - **Instagram Scraper Server 1 & Server 2 Fixes**: Resolved JSON parse errors (`Unexpected token '<'`) on Server 2 (DownReels) by adding HTML error response guards, and fixed redirect loops on Server 1 (InDown) by adding missing POST form payload parameters.
 - **Instagram Direct Embed Fallback Engine**: Integrated direct Instagram embed parsing (`/p/{shortcode}/embed/captioned/`) with Mobile Safari User-Agent (`SAFARI_MOBILE_UA`) as an automatic fallback for both servers, extracting original-resolution Reels, single photos, videos, and multi-slide carousels seamlessly.
-- **Complete Removal of Data Export/Import & Scheduled Auto-Backup**: Completely removed legacy data export (`exportMoriData`), data import (`importMoriData`), and scheduled auto-backup (`autoBackupDataCheck`) from the settings UI and codebase to keep app storage logic lightweight, fast, and zero-overhead.
-- **Full Network Settings Integration**: Fully wired up Anti-403 Header Guard (`mori_header_spoofing`), Cellular Data Warning Guard (`mori_cellular_warning`), Bypass SSL Errors (`mori_bypass_ssl`), and Force IPv4 Mode (`mori_force_ipv4`) into `scraperFetch()` and download lifecycle.
+- **Complete Removal of Data Export/Import & Scheduled Auto-Backup**: Completely removed legacy data export (`exportRYSAVData`), data import (`importRYSAVData`), and scheduled auto-backup (`autoBackupDataCheck`) from the settings UI and codebase to keep app storage logic lightweight, fast, and zero-overhead.
+- **Full Network Settings Integration**: Fully wired up Anti-403 Header Guard (`rysav_header_spoofing`), Cellular Data Warning Guard (`rysav_cellular_warning`), Bypass SSL Errors (`rysav_bypass_ssl`), and Force IPv4 Mode (`rysav_force_ipv4`) into `scraperFetch()` and download lifecycle.
 - **Cellular Data Warning Modal Guard**: Integrated an interactive confirmation prompt when attempting media downloads over cellular data connection (2G/3G/4G/5G).
 - **Anti-403 Browser Header Injection**: Automatic spoofing of browser headers (`Referer`, `Accept`, `Accept-Language`, `Sec-Fetch-Dest`, `Sec-Fetch-Mode`) to bypass 403 Forbidden blocks across social media scrapers.
 - **Settings Layout Refinement**: Repositioned **Check Server Latency** directly below **Timeout Limit** in _Network & Performance_, and removed redundant Export & Import Data actions.
-- **Streamlined Settings UI**: Removed unused/redundant Scraper Engine & Status subpage to keep Mori's Settings menu clean, fast, and minimalist.
+- **Streamlined Settings UI**: Removed unused/redundant Scraper Engine & Status subpage to keep RYSAV's Settings menu clean, fast, and minimalist.
 - **App Version Bump**: Bumped version to `v4.2.1` across all platform manifests (`package.json`, `tauri.conf.json`, `build.gradle`, `project.pbxproj`, and app UI).
 
 ## Supported Platforms
@@ -103,7 +103,7 @@ Mori is a fast and simple downloader for saving videos, photos, and music from 1
 ## Project Structure
 
 ```
-Mori/
+RYSAV/
 ├── android/                    # Capacitor Android native project
 │   ├── app/src/main/           # Android manifest, resources, assets
 │   └── gradle/                 # Gradle wrapper & build config
@@ -120,7 +120,7 @@ Mori/
 │   ├── js/
 │   │   ├── app.js              # Entry point — module wiring & startup init
 │   │   ├── components/         # Custom UI components
-│   │   │   └── player.js       # Mori media player (video/audio)
+│   │   │   └── player.js       # RYSAV media player (video/audio)
 │   │   ├── i18n/               # Multi-language translations (EN/ID/JA)
 │   │   │   └── index.js
 │   │   ├── modules/            # Core app managers & state
@@ -177,7 +177,7 @@ Mori/
 - **Live Media Previews**: View images, play videos, and listen to audio directly within the app before downloading.
 - **Standalone PDF Document Export**: Convert image galleries and multi-photo carousel posts from any platform into high-quality PDF files for offline viewing via `pdf-lib`.
 - **Private History Manager**: Downloaded files are managed internally with individual history cards, local playback support, and offline badge detection.
-- **Share Intent Integration**: Send links directly to Mori from other apps via the system Share menu.
+- **Share Intent Integration**: Send links directly to RYSAV from other apps via the system Share menu.
 - **Auto Clipboard Paste**: Automatically detects and pastes links from clipboard when returning to the app (smartly disabled in Batch mode to preserve drafts).
 - **Auto Update Check**: Checks for new versions on startup via GitHub Releases and shows a popup modal when an update is available.
 - **Hardened Passcode & Biometric Privacy Lock**: Secure your history and settings with 4-Digit PIN Passcode or native Biometric authentication (Fingerprint, FaceID, TouchID) featuring background re-locking.
@@ -187,20 +187,20 @@ Mori/
 
 ## Security & Safety Notice
 
-Mori is **100% open-source, ad-free, and contains zero malware, spyware, or trackers**. All network requests and file downloads run locally on your device without external analytics servers.
+RYSAV is **100% open-source, ad-free, and contains zero malware, spyware, or trackers**. All network requests and file downloads run locally on your device without external analytics servers.
 
 > [!TIP]
 > **Doubtful or concerned about false-positive security warnings?**  
-> Because Mori release binaries (`.apk`, `.dmg`, `.exe`, `.ipa`) are open-source builds compiled without expensive commercial enterprise signing certificates, some OS security software or browsers may display standard false-positive warnings.  
+> Because RYSAV release binaries (`.apk`, `.dmg`, `.exe`, `.ipa`) are open-source builds compiled without expensive commercial enterprise signing certificates, some OS security software or browsers may display standard false-positive warnings.  
 > If you have any doubts, you can upload and scan any release file directly on **[VirusTotal](https://www.virustotal.com/)** before installing!
 
 > [!NOTE]
-> **macOS Gatekeeper Warning ("Mori" is damaged and can't be opened):**  
+> **macOS Gatekeeper Warning ("RYSAV" is damaged and can't be opened):**  
 > When downloading the `.dmg` or `.app` via web browsers (Brave, Safari, Chrome), macOS flags unnotarized internet downloads with a quarantine attribute (`com.apple.quarantine`).  
-> To open Mori smoothly on macOS:
+> To open RYSAV smoothly on macOS:
 >
-> 1. Run in Terminal: `sudo xattr -cr /Applications/Mori.app`
-> 2. Or **Right-Click** (Control + Click) `Mori.app` in Finder → Select **Open** → Click **Open**.
+> 1. Run in Terminal: `sudo xattr -cr /Applications/RYSAV.app`
+> 2. Or **Right-Click** (Control + Click) `RYSAV.app` in Finder → Select **Open** → Click **Open**.
 
 > [!NOTE]
 > **Android Play Protect Warning:**  
@@ -208,7 +208,7 @@ Mori is **100% open-source, ad-free, and contains zero malware, spyware, or trac
 
 ## How to Use
 
-1. Copy a link from a supported platform or Share it directly to Mori.
+1. Copy a link from a supported platform or Share it directly to RYSAV.
 2. Use the **Paste** button or let the auto-detection handle the link.
 3. Tap **Analyze** to verify the content.
 4. Preview the media (swipe through carousels if available).
@@ -217,9 +217,9 @@ Mori is **100% open-source, ad-free, and contains zero malware, spyware, or trac
 
 ## For Developers
 
-Mori is built using Capacitor and Vanilla JS for high performance.
+RYSAV is built using Capacitor and Vanilla JS for high performance.
 
-- **On Android & iOS**: Uses `CapacitorHttp` to bypass CORS and download directly from the device IP. Files are saved to local device storage and accessible via the **Files app** (`On My iPhone/Mori`) on iOS.
+- **On Android & iOS**: Uses `CapacitorHttp` to bypass CORS and download directly from the device IP. Files are saved to local device storage and accessible via the **Files app** (`On My iPhone/RYSAV`) on iOS.
 - **On Web**: Preview mode only — runs directly in the browser with limited functionality.
 
 ### Building the APK
@@ -232,16 +232,16 @@ npx cap sync android
 cd android && ./gradlew assembleDebug
 
 # 3. The APK is output at:
-#    android/app/build/outputs/apk/debug/Mori v{VERSION}.apk
+#    android/app/build/outputs/apk/debug/RYSAV v{VERSION}.apk
 ```
 
 For a release APK, first generate a signing keystore (one-time):
 
 ```bash
-keytool -genkey -v -keystore android/app/release.keystore -alias mori \
+keytool -genkey -v -keystore android/app/release.keystore -alias rysav \
   -keyalg RSA -keysize 2048 -validity 10000 \
   -storepass android123 -keypass android123 \
-  -dname "CN=Mori, OU=Development, O=MoriApp, L=Unknown, ST=Unknown, C=ID"
+  -dname "CN=RYSAV, OU=Development, O=RYSAVApp, L=Unknown, ST=Unknown, C=ID"
 ```
 
 Then add `signingConfigs` block to `android/app/build.gradle`:
@@ -252,7 +252,7 @@ android {
         release {
             storeFile file('release.keystore')
             storePassword 'android123'
-            keyAlias 'mori'
+            keyAlias 'rysav'
             keyPassword 'android123'
         }
     }
@@ -271,11 +271,11 @@ Build the signed release APK:
 cd android && ./gradlew assembleRelease
 ```
 
-Output at: `android/app/build/outputs/apk/release/Mori v{VERSION}.apk`
+Output at: `android/app/build/outputs/apk/release/RYSAV v{VERSION}.apk`
 
 ### Running & Building for Desktop (macOS & Windows)
 
-Mori uses **Tauri v2** for lightweight, high-performance desktop apps on macOS (.dmg, .app) and Windows (.msi, .exe).
+RYSAV uses **Tauri v2** for lightweight, high-performance desktop apps on macOS (.dmg, .app) and Windows (.msi, .exe).
 
 #### Development Mode
 
@@ -289,8 +289,8 @@ npm run tauri:dev
 npm run tauri:build
 ```
 
-- **macOS Output**: `src-tauri/target/release/bundle/dmg/Mori_4.2.2_aarch64.dmg` & `Mori.app`
-- **Windows Output**: `src-tauri/target/release/bundle/msi/Mori_4.2.2_x64_en-US.msi` & `.exe`
+- **macOS Output**: `src-tauri/target/release/bundle/dmg/RYSAV_4.2.2_aarch64.dmg` & `RYSAV.app`
+- **Windows Output**: `src-tauri/target/release/bundle/msi/RYSAV_4.2.2_x64_en-US.msi` & `.exe`
 
 ### Running & Building for iOS
 
@@ -315,17 +315,17 @@ If you do not have an iPhone connected or a paid Apple Developer Account, you ca
 npx cap sync ios
 
 # 2. Compile target for generic iOS device without code signing
-xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/Mori.xcarchive archive CODE_SIGNING_ALLOWED=NO
+xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/RYSAV.xcarchive archive CODE_SIGNING_ALLOWED=NO
 
 # 3. Package compiled app bundle into a Payload folder and Zip to IPA
-mkdir -p Payload && cp -r build/Mori.xcarchive/Products/Applications/App.app Payload/ && zip -r "Mori v4.2.2.ipa" Payload && rm -rf Payload build
+mkdir -p Payload && cp -r build/RYSAV.xcarchive/Products/Applications/App.app Payload/ && zip -r "RYSAV v4.2.2.ipa" Payload && rm -rf Payload build
 ```
 
-This outputs `Mori v4.2.2.ipa` in your project root directory, ready to be sideloaded via AltStore, Sideloadly, Scarlet, or TrollStore.
+This outputs `RYSAV v4.2.2.ipa` in your project root directory, ready to be sideloaded via AltStore, Sideloadly, Scarlet, or TrollStore.
 
 ## iOS Sideloading Guide
 
-Since Mori is client-side only and not distributed on the Apple App Store, iOS users can install `Mori v4.2.2.ipa` using one of the following sideloading methods:
+Since RYSAV is client-side only and not distributed on the Apple App Store, iOS users can install `RYSAV v4.2.2.ipa` using one of the following sideloading methods:
 
 - **AltStore / Sideloadly**: Best for all iOS versions. Requires a PC/Mac for initial installation, and app signatures need to be refreshed every 7 days (free personal Apple ID).
 - **TrollStore**: Best for compatible iOS versions. Installs permanently, requires no computer after setup, and does not expire.
@@ -339,4 +339,4 @@ Instagram: @\_coflyn
 
 ## License
 
-Mori is released under the **MIT License**. Feel free to use, modify, and distribute it.
+RYSAV is released under the **MIT License**. Feel free to use, modify, and distribute it.

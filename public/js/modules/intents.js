@@ -70,12 +70,12 @@ export async function handlePasteFromClipboard(isSilent = false) {
         }
 
         const autoAnalyze =
-          localStorage.getItem("mori_auto_analyze") === "true";
+          localStorage.getItem("rysav_auto_analyze") === "true";
         if (autoAnalyze) {
           setTimeout(() => downloadBtn?.click(), 300);
         } else if (isSilent) {
           const autoDownload =
-            localStorage.getItem("mori_auto_download") === "true";
+            localStorage.getItem("rysav_auto_download") === "true";
           if (autoDownload) {
             // Wi-Fi check for auto-download
             const canAuto = await checkWifiOnlyGuard();
@@ -165,7 +165,7 @@ function processSharedText(text) {
 }
 
 // Handle Shared Intent from Native Android
-window.addEventListener("moriShareIntent", (e) => {
+window.addEventListener("rysavShareIntent", (e) => {
   try {
     let data = e.detail;
     if (typeof data === "string") {
@@ -184,9 +184,9 @@ window.addEventListener("moriShareIntent", (e) => {
 
 // Startup check for shared text (fallback for cold starts)
 setTimeout(() => {
-  if (window.moriShareText) {
-    processSharedText(window.moriShareText);
-    window.moriShareText = null; // Clear it
+  if (window.rysavShareText) {
+    processSharedText(window.rysavShareText);
+    window.rysavShareText = null; // Clear it
   }
 }, 1500);
 
@@ -215,8 +215,8 @@ if (App && typeof App.addListener === "function") {
   // App State Change (Auto-detect clipboard on resume)
   App.addListener("appStateChange", ({ isActive }) => {
     if (isActive) {
-      const loopSetting = localStorage.getItem("mori_loop") !== "false";
-      const autoPaste = localStorage.getItem("mori_auto_paste") !== "false";
+      const loopSetting = localStorage.getItem("rysav_loop") !== "false";
+      const autoPaste = localStorage.getItem("rysav_auto_paste") !== "false";
       if (autoPaste) {
         setIntentPending(true); // Assume a share might be coming
 

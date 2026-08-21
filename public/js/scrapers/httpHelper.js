@@ -6,7 +6,7 @@ import { CapacitorHttp, getUserAgent } from "../utils/index.js";
  * @returns {number} Timeout in milliseconds
  */
 export function getRequestTimeout() {
-  const customSec = parseInt(localStorage.getItem("mori_request_timeout"), 10);
+  const customSec = parseInt(localStorage.getItem("rysav_request_timeout"), 10);
   if (!isNaN(customSec) && customSec >= 5 && customSec <= 180) {
     return customSec * 1000;
   }
@@ -55,9 +55,9 @@ export async function scraperFetch(options, serverName = "Server") {
   }
 
   const isHeaderSpoofing =
-    localStorage.getItem("mori_header_spoofing") !== "false";
-  const isBypassSsl = localStorage.getItem("mori_bypass_ssl") === "true";
-  const isForceIpv4 = localStorage.getItem("mori_force_ipv4") === "true";
+    localStorage.getItem("rysav_header_spoofing") !== "false";
+  const isBypassSsl = localStorage.getItem("rysav_bypass_ssl") === "true";
+  const isForceIpv4 = localStorage.getItem("rysav_force_ipv4") === "true";
 
   if (isHeaderSpoofing) {
     try {

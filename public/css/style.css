@@ -289,7 +289,7 @@ input[type="text"]:focus {
   }
 }
 
-@keyframes moriEntrance {
+@keyframes rysavEntrance {
   0% {
     opacity: 0;
     transform: translateY(15px) scale(0.98);
@@ -303,7 +303,7 @@ input[type="text"]:focus {
 }
 
 .page-content:not(.hidden) {
-  animation: moriEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: rysavEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .settings-list {
@@ -359,7 +359,7 @@ input[type="text"]:focus {
 }
 
 .thumbnail-wrapper::before {
-  content: "MORI";
+  content: "RYSAV";
   position: absolute;
   font-weight: 800;
   letter-spacing: 10px;
@@ -550,7 +550,7 @@ input[type="text"]:focus {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.mori-player-container {
+.rysav-player-container {
   position: relative;
   width: 100%;
   border-radius: var(--radius-lg);
@@ -562,11 +562,11 @@ input[type="text"]:focus {
   max-height: 75vh;
 }
 
-.mori-player-container.mori-loading video {
+.rysav-player-container.rysav-loading video {
   opacity: 0.5;
 }
 
-.mori-player-container.mori-loading::after {
+.rysav-player-container.rysav-loading::after {
   content: "";
   position: absolute;
   width: 40px;
@@ -574,11 +574,11 @@ input[type="text"]:focus {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
   border-radius: 50%;
-  animation: mori-spin 0.8s linear infinite;
+  animation: rysav-spin 0.8s linear infinite;
   z-index: 10;
 }
 
-@keyframes mori-spin {
+@keyframes rysav-spin {
   to {
     transform: rotate(360deg);
   }
@@ -590,7 +590,7 @@ input[type="text"]:focus {
   object-fit: contain;
 }
 
-.mori-player-controls {
+.rysav-player-controls {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -605,12 +605,12 @@ input[type="text"]:focus {
   z-index: 10;
 }
 
-.mori-player-container:hover .mori-player-controls,
-.mori-player-container.touching .mori-player-controls {
+.rysav-player-container:hover .rysav-player-controls,
+.rysav-player-container.touching .rysav-player-controls {
   opacity: 1;
 }
 
-.mori-player-progress {
+.rysav-player-progress {
   width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.2);
@@ -619,7 +619,7 @@ input[type="text"]:focus {
   position: relative;
 }
 
-.mori-player-progress-inner {
+.rysav-player-progress-inner {
   height: 100%;
   background: var(--primary);
   width: 0%;
@@ -627,7 +627,7 @@ input[type="text"]:focus {
   position: relative;
 }
 
-.mori-player-progress-inner::after {
+.rysav-player-progress-inner::after {
   content: "";
   position: absolute;
   right: -5px;
@@ -639,7 +639,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 5px var(--primary);
 }
 
-.mori-player-bottom {
+.rysav-player-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -648,13 +648,13 @@ input[type="text"]:focus {
   font-weight: 600;
 }
 
-.mori-player-actions {
+.rysav-player-actions {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.mori-player-btn {
+.rysav-player-btn {
   background: none;
   border: none;
   color: #fff;
@@ -666,11 +666,11 @@ input[type="text"]:focus {
   transition: transform 0.1s ease;
 }
 
-.mori-player-btn:active {
+.rysav-player-btn:active {
   transform: scale(0.9);
 }
 
-.mori-player-big-play {
+.rysav-player-big-play {
   position: absolute;
   width: 60px;
   height: 60px;
@@ -689,7 +689,7 @@ input[type="text"]:focus {
   z-index: 11;
 }
 
-.mori-player-big-play.visible {
+.rysav-player-big-play.visible {
   opacity: 1;
   transform: scale(1);
 }
@@ -1684,7 +1684,7 @@ input[type="text"]:focus {
   border: 1px solid var(--primary);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  animation: moriEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: rysavEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-header {
@@ -1735,7 +1735,7 @@ input[type="text"]:focus {
 }
 
 .modal-thumb-container::before {
-  content: "MORI";
+  content: "RYSAV";
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 5px;
@@ -2068,7 +2068,7 @@ input[type="text"]:focus {
 }
 
 /* Input with Icon Styling */
-.mori-input-with-icon {
+.rysav-input-with-icon {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2079,12 +2079,12 @@ input[type="text"]:focus {
   border-radius: 4px;
 }
 
-.mori-input-with-icon svg {
+.rysav-input-with-icon svg {
   flex-shrink: 0;
   opacity: 0.7;
 }
 
-.mori-input-noborder {
+.rysav-input-noborder {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;

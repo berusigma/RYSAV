@@ -36,7 +36,7 @@ clearAllBtn?.addEventListener("click", () => {
       "Are you sure you want to delete all download history?",
     async () => {
       // Clean up physical thumbnail files
-      const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
       const thumbs = [];
       for (const item of history) {
         thumbs.push(item.thumbnail, item.localThumbnail);
@@ -50,7 +50,7 @@ clearAllBtn?.addEventListener("click", () => {
         }
       }
 
-      localStorage.removeItem("mori_history");
+      localStorage.removeItem("rysav_history");
       setIsEditingHistory(false);
       setUIState({ isEditingHistory: false });
       renderHistory(onHistoryItemClick, onHistoryDeleteClick);
@@ -73,7 +73,7 @@ export async function onHistoryDeleteClick(url) {
     translations[currentLang]["msg-delete-item-confirm"] ||
       "Remove this item from history?",
     async () => {
-      let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+      let history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
       const index = history.findIndex((h) => h.url === url);
       if (index === -1) return;
       const itemToDelete = history[index];
@@ -98,18 +98,18 @@ export async function onHistoryDeleteClick(url) {
       }
 
       history.splice(index, 1);
-      localStorage.setItem("mori_history", JSON.stringify(history));
+      localStorage.setItem("rysav_history", JSON.stringify(history));
       renderHistory(onHistoryItemClick, onHistoryDeleteClick);
     }
   );
 }
 
 // Global Event for File Saved (Syncing UI and History)
-window.addEventListener("mori_file_saved", async (e) => {
-  if (localStorage.getItem("mori_incognito") === "true") return;
+window.addEventListener("rysav_file_saved", async (e) => {
+  if (localStorage.getItem("rysav_incognito") === "true") return;
   const { url, path, uri } = e.detail;
   const target = cleanUrl(url);
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
 
   const isVideo = path.toLowerCase().endsWith(".mp4");
   const isAudio = path.toLowerCase().endsWith(".mp3");
@@ -146,7 +146,7 @@ window.addEventListener("mori_file_saved", async (e) => {
     return item;
   });
 
-  const limitVal = localStorage.getItem("mori_history_limit") || "unlimited";
+  const limitVal = localStorage.getItem("rysav_history_limit") || "unlimited";
   if (limitVal !== "unlimited") {
     const maxItems = parseInt(limitVal, 10);
     if (!isNaN(maxItems) && history.length > maxItems) {
@@ -154,7 +154,7 @@ window.addEventListener("mori_file_saved", async (e) => {
     }
   }
 
-  localStorage.setItem("mori_history", JSON.stringify(history));
+  localStorage.setItem("rysav_history", JSON.stringify(history));
   renderHistory(onHistoryItemClick, onHistoryDeleteClick);
 
   if (isVideo && window.Capacitor) {
@@ -163,7 +163,7 @@ window.addEventListener("mori_file_saved", async (e) => {
       const localThumbnail = await getVideoThumbnail(videoSrc);
 
       if (localThumbnail) {
-        history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+        history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
         history = history.map((item) => {
           if (cleanUrl(item.url) === target) {
             const localFiles = item.localFiles || [];
@@ -180,7 +180,7 @@ window.addEventListener("mori_file_saved", async (e) => {
           }
           return item;
         });
-        localStorage.setItem("mori_history", JSON.stringify(history));
+        localStorage.setItem("rysav_history", JSON.stringify(history));
         renderHistory(onHistoryItemClick, onHistoryDeleteClick);
       }
     } catch (err) {
@@ -194,8 +194,8 @@ window.addEventListener("mori_file_saved", async (e) => {
 
 // History Storage Helper
 export function saveToHistory(result, url) {
-  if (localStorage.getItem("mori_incognito") === "true") return;
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  if (localStorage.getItem("rysav_incognito") === "true") return;
+  let history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
 
   let cleanTitle = (result.title || "Content")
     .replace(/#[^\s#]+/g, "")
@@ -228,13 +228,13 @@ export function saveToHistory(result, url) {
   history.unshift(newItem);
 
   // Apply user-configured history limit
-  const limitVal = localStorage.getItem("mori_history_limit") || "unlimited";
+  const limitVal = localStorage.getItem("rysav_history_limit") || "unlimited";
   let maxItems = 100;
   if (limitVal !== "unlimited") {
     const parsed = parseInt(limitVal, 10);
     if (!isNaN(parsed) && parsed > 0) maxItems = parsed;
   }
-  localStorage.setItem("mori_history", JSON.stringify(history.slice(0, maxItems)));
+  localStorage.setItem("rysav_history", JSON.stringify(history.slice(0, maxItems)));
 
   // Refresh UI if defined
   if (typeof renderHistory === "function") {
@@ -248,13 +248,13 @@ export function saveToHistory(result, url) {
 
 // Auto-Clear Old History (Items > 30 days)
 export async function autoClearOldHistory() {
-  const daysVal = localStorage.getItem("mori_auto_clear_days") || "off";
+  const daysVal = localStorage.getItem("rysav_auto_clear_days") || "off";
   if (daysVal === "off") return;
 
   const days = parseInt(daysVal, 10);
   if (isNaN(days) || days <= 0) return;
 
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
   const cutoffTime = days * 24 * 60 * 60 * 1000;
   const now = Date.now();
 
@@ -266,7 +266,7 @@ export async function autoClearOldHistory() {
     console.log(
       `[CLEANUP] Removed ${history.length - filtered.length} old history items older than ${days} days`,
     );
-    localStorage.setItem("mori_history", JSON.stringify(filtered));
+    localStorage.setItem("rysav_history", JSON.stringify(filtered));
     renderHistory(onHistoryItemClick, onHistoryDeleteClick);
 
     // Delete orphaned thumbnail files to prevent storage bloat
@@ -295,14 +295,14 @@ export async function autoClearOldHistory() {
 
 export function autoClearOldCache() {
   const cacheDaysVal =
-    localStorage.getItem("mori_auto_clear_cache_days") || "off";
+    localStorage.getItem("rysav_auto_clear_cache_days") || "off";
   if (cacheDaysVal === "off") return;
 
   const days = parseInt(cacheDaysVal, 10);
   if (isNaN(days) || days <= 0) return;
 
   const lastCleanup = parseInt(
-    localStorage.getItem("mori_last_cache_cleanup_ts") || "0",
+    localStorage.getItem("rysav_last_cache_cleanup_ts") || "0",
     10,
   );
   const cutoffTime = days * 24 * 60 * 60 * 1000;
@@ -313,6 +313,6 @@ export function autoClearOldCache() {
       `[CLEANUP] Executing auto clear cache (retention: ${days} days)`,
     );
     clearCacheSilently();
-    localStorage.setItem("mori_last_cache_cleanup_ts", String(now));
+    localStorage.setItem("rysav_last_cache_cleanup_ts", String(now));
   }
 }

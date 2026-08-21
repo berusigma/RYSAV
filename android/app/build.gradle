@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.mori.downloader"
+    namespace = "com.rysav.downloader"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.mori.downloader"
+        applicationId "com.rysav.downloader"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 13
@@ -20,7 +20,7 @@ android {
         release {
             storeFile file('release.keystore')
             storePassword 'android123'
-            keyAlias 'mori'
+            keyAlias 'rysav'
             keyPassword 'android123'
         }
     }
@@ -33,7 +33,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "Mori v${variant.versionName}.apk"
+            outputFileName = "RYSAV v${variant.versionName}.apk"
         }
     }
 }

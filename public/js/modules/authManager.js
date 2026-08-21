@@ -19,7 +19,7 @@ export async function verifyBiometric(
         await NativeBiometric.verifyIdentity({
           reason:
             translations[currentLang][reasonLabel] || "Authentication required",
-          title: "Mori Privacy Lock",
+          title: "RYSAV Privacy Lock",
           subtitle: "",
           description: "",
         });
@@ -86,7 +86,7 @@ export function showPinModal(mode = "verify", currentLang = "en") {
     };
 
     const processPin = () => {
-      const savedPin = localStorage.getItem("mori_pin");
+      const savedPin = localStorage.getItem("rysav_pin");
       const langDict = translations[currentLang] || translations["en"];
 
       if (step === "verify") {
@@ -105,7 +105,7 @@ export function showPinModal(mode = "verify", currentLang = "en") {
         updateDots();
       } else if (step === "confirm") {
         if (currentInput === firstPin) {
-          localStorage.setItem("mori_pin", currentInput);
+          localStorage.setItem("rysav_pin", currentInput);
           showToast(langDict["toast-pin-saved"] || "PIN saved successfully");
           closePinModal(true);
         } else {
@@ -161,9 +161,9 @@ export async function verifyLock(
   reasonLabel = "label-biometric-reason",
   currentLang = "en",
 ) {
-  const lockType = localStorage.getItem("mori_lock_type") || "none";
+  const lockType = localStorage.getItem("rysav_lock_type") || "none";
   if (lockType === "pin") {
-    const hasPin = !!localStorage.getItem("mori_pin");
+    const hasPin = !!localStorage.getItem("rysav_pin");
     if (!hasPin) {
       return await showPinModal("setup", currentLang);
     }
@@ -181,12 +181,12 @@ export function initAuthListeners(currentLang = "en") {
   const lockTypeText = document.getElementById("lockTypeText");
 
   const isPrivacyOnInitial =
-    localStorage.getItem("mori_privacy_lock") === "true";
+    localStorage.getItem("rysav_privacy_lock") === "true";
   if (privacyLockToggle) {
     privacyLockToggle.checked = isPrivacyOnInitial;
     privacyLockToggle.addEventListener("change", async (e) => {
       const isChecked = e.target.checked;
-      const currentLockType = localStorage.getItem("mori_lock_type") || "none";
+      const currentLockType = localStorage.getItem("rysav_lock_type") || "none";
 
       if (!isChecked && currentLockType !== "none") {
         const verified = await verifyLock(
@@ -199,14 +199,14 @@ export function initAuthListeners(currentLang = "en") {
         }
       }
 
-      localStorage.setItem("mori_privacy_lock", isChecked ? "true" : "false");
+      localStorage.setItem("rysav_privacy_lock", isChecked ? "true" : "false");
       if (isChecked) {
         setHistoryUnlocked(false);
         setSettingsUnlocked(false);
         if (currentLockType === "none") {
-          const hasPin = !!localStorage.getItem("mori_pin");
+          const hasPin = !!localStorage.getItem("rysav_pin");
           const defaultType = hasPin ? "pin" : "biometric";
-          localStorage.setItem("mori_lock_type", defaultType);
+          localStorage.setItem("rysav_lock_type", defaultType);
           if (lockTypeText) {
             lockTypeText.textContent =
               translations[currentLang][`lock-type-${defaultType}`] ||
@@ -230,13 +230,13 @@ export function initAuthListeners(currentLang = "en") {
     if (!isNative && lockTypeMenu) {
       const bioItem = lockTypeMenu.querySelector('[data-value="biometric"]');
       if (bioItem) bioItem.style.display = "none";
-      if (localStorage.getItem("mori_lock_type") === "biometric") {
-        const hasPin = !!localStorage.getItem("mori_pin");
-        localStorage.setItem("mori_lock_type", hasPin ? "pin" : "none");
+      if (localStorage.getItem("rysav_lock_type") === "biometric") {
+        const hasPin = !!localStorage.getItem("rysav_pin");
+        localStorage.setItem("rysav_lock_type", hasPin ? "pin" : "none");
       }
     }
 
-    const currentLock = localStorage.getItem("mori_lock_type") || "none";
+    const currentLock = localStorage.getItem("rysav_lock_type") || "none";
     if (lockTypeText) {
       lockTypeText.textContent =
         translations[currentLang][`lock-type-${currentLock}`] || currentLock;
@@ -254,7 +254,7 @@ export function initAuthListeners(currentLang = "en") {
     lockTypeMenu?.querySelectorAll(".dropdown-item").forEach((item) => {
       item.addEventListener("click", async () => {
         const type = item.getAttribute("data-value");
-        const currentType = localStorage.getItem("mori_lock_type") || "none";
+        const currentType = localStorage.getItem("rysav_lock_type") || "none";
 
         if (type === currentType) return;
 
@@ -267,22 +267,22 @@ export function initAuthListeners(currentLang = "en") {
         }
 
         if (type === "pin") {
-          const hasPin = !!localStorage.getItem("mori_pin");
+          const hasPin = !!localStorage.getItem("rysav_pin");
           if (!hasPin) {
             const setupSuccess = await showPinModal("setup", currentLang);
             if (!setupSuccess) return;
           }
         }
 
-        localStorage.setItem("mori_lock_type", type);
+        localStorage.setItem("rysav_lock_type", type);
         if (lockTypeText) lockTypeText.textContent = item.textContent;
 
         if (type !== "none") {
-          localStorage.setItem("mori_privacy_lock", "true");
+          localStorage.setItem("rysav_privacy_lock", "true");
           if (privacyLockToggle) privacyLockToggle.checked = true;
           setHistoryUnlocked(false);
         } else {
-          localStorage.setItem("mori_privacy_lock", "false");
+          localStorage.setItem("rysav_privacy_lock", "false");
           if (privacyLockToggle) privacyLockToggle.checked = false;
           setHistoryUnlocked(true);
         }
@@ -302,7 +302,7 @@ export function initAuthListeners(currentLang = "en") {
     window.Capacitor.Plugins.App.addListener(
       "appStateChange",
       ({ isActive }) => {
-        if (!isActive && localStorage.getItem("mori_privacy_lock") === "true") {
+        if (!isActive && localStorage.getItem("rysav_privacy_lock") === "true") {
           setHistoryUnlocked(false);
           setSettingsUnlocked(false);
         }

@@ -182,8 +182,8 @@ export async function showModal(item, onRedownload) {
         if (media) {
           if (isActive) {
             media.currentTime = 0;
-            media.loop = localStorage.getItem("mori_loop") !== "false";
-            if (localStorage.getItem("mori_autoplay") !== "false") {
+            media.loop = localStorage.getItem("rysav_loop") !== "false";
+            if (localStorage.getItem("rysav_autoplay") !== "false") {
               media.play().catch(() => {});
             }
           } else {

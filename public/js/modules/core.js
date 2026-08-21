@@ -3,7 +3,7 @@ import { translations } from "../i18n/index.js";
 import { Filesystem } from "../utils/index.js";
 
 export const APP_VERSION = "4.2.2";
-export const GITHUB_REPO = "coflyn/Mori";
+export const GITHUB_REPO = "coflyn/RYSAV";
 export const UPDATE_CHECK_URL = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;
 export const REPO_URL = `https://github.com/${GITHUB_REPO}`;
 
@@ -155,7 +155,7 @@ export const hideGuideCheckbox = document.getElementById("hideGuideCheckbox");
 export const closeGuideBtn = document.getElementById("closeGuideBtn");
 export const guideToSettingsBtn = document.getElementById("guideToSettingsBtn");
 
-export let currentLang = localStorage.getItem("mori_lang") || "en";
+export let currentLang = localStorage.getItem("rysav_lang") || "en";
 export function setCurrentLang(v) {
   currentLang = v;
 }
@@ -217,9 +217,9 @@ export async function updateStorageInfo() {
   try {
     let totalSize = 0;
     totalSize += await getFolderSize("", "CACHE");
-    totalSize += await getFolderSize("Download/Mori", "EXTERNAL_STORAGE");
+    totalSize += await getFolderSize("Download/RYSAV", "EXTERNAL_STORAGE");
     // Also check old location for compatibility
-    totalSize += await getFolderSize("Download/Mori", "EXTERNAL");
+    totalSize += await getFolderSize("Download/RYSAV", "EXTERNAL");
 
     const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
     storageVal.textContent = `${sizeInMB} MB`;
@@ -234,7 +234,7 @@ export function updateGreeting() {}
 export async function clearCacheSilently() {
   if (!Filesystem) return;
   try {
-    const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    const history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
     const activeThumbs = new Set(
       history
         .map((item) => item.thumbnail)

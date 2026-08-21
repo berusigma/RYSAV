@@ -23,12 +23,12 @@ export function renderMediaSlides(container, items, resultThumbnail) {
   if (!container) return;
 
   // Cleanup old players before clearing
-  container.querySelectorAll(".mori-player-container").forEach((pc) => {
+  container.querySelectorAll(".rysav-player-container").forEach((pc) => {
     if (pc._cleanup) pc._cleanup();
   });
   container.innerHTML = "";
 
-  const isDataSaver = localStorage.getItem("mori_data_saver") === "true";
+  const isDataSaver = localStorage.getItem("rysav_data_saver") === "true";
 
   items.forEach((dl, index) => {
     const slide = document.createElement("div");
@@ -137,8 +137,8 @@ export function renderMediaSlides(container, items, resultThumbnail) {
       const audio = document.createElement("audio");
       audio.controls = true;
       audio.style.width = "100%";
-      const autoPlaySetting = localStorage.getItem("mori_autoplay") !== "false";
-      const loopSetting = localStorage.getItem("mori_loop") !== "false";
+      const autoPlaySetting = localStorage.getItem("rysav_autoplay") !== "false";
+      const loopSetting = localStorage.getItem("rysav_loop") !== "false";
       audio.autoplay = index === 0 && autoPlaySetting;
       audio.loop = loopSetting;
 
@@ -439,8 +439,8 @@ export function updateSliderUI() {
       if (media) {
         if (media.readyState < 1) media.load();
         media.currentTime = 0;
-        media.loop = localStorage.getItem("mori_loop") !== "false";
-        if (localStorage.getItem("mori_autoplay") !== "false") {
+        media.loop = localStorage.getItem("rysav_loop") !== "false";
+        if (localStorage.getItem("rysav_autoplay") !== "false") {
           media.play().catch(() => {});
         }
       }
@@ -865,7 +865,7 @@ export async function exportGalleryToPdf(title, items) {
         const base64 = reader.result.split(",")[1];
         try {
           await Filesystem.writeFile({
-            path: `Download/Mori/${fileName}`,
+            path: `Download/RYSAV/${fileName}`,
             data: base64,
             directory: "EXTERNAL_STORAGE",
             recursive: true,
@@ -889,7 +889,7 @@ export async function exportGalleryToPdf(title, items) {
       if (tauriInvoke) {
         try {
           const customFolder =
-            localStorage.getItem("mori_download_path") || "Mori";
+            localStorage.getItem("rysav_download_path") || "RYSAV";
           await tauriInvoke("tauri_save_bytes_file", {
             bytes: Array.from(pdfBytes),
             filename: fileName,
@@ -898,7 +898,7 @@ export async function exportGalleryToPdf(title, items) {
           savedTauri = true;
           showToast(
             translations[currentLang]["pdf-toast-saved"] ||
-              "PDF saved to Mori folder!",
+              "PDF saved to RYSAV folder!",
           );
         } catch (e) {
           console.warn(

@@ -40,14 +40,14 @@ import {
 } from "./core.js";
 
 // Init Theme
-const savedTheme = localStorage.getItem("mori_theme") || "light";
+const savedTheme = localStorage.getItem("rysav_theme") || "light";
 document.documentElement.setAttribute("data-theme", savedTheme);
 if (darkModeToggle) darkModeToggle.checked = savedTheme === "dark";
 
 darkModeToggle?.addEventListener("change", (e) => {
   const theme = e.target.checked ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("mori_theme", theme);
+  localStorage.setItem("rysav_theme", theme);
   applyColorAccent();
   const lang = translations[currentLang] || translations.en;
   showToast(
@@ -63,7 +63,7 @@ const accentColors = {
 };
 
 export function applyColorAccent() {
-  const theme = localStorage.getItem("mori_theme") || "light";
+  const theme = localStorage.getItem("rysav_theme") || "light";
   const color = accentColors.black[theme] || "#1a1917";
   document.documentElement.style.setProperty("--primary", color);
 }
@@ -71,11 +71,11 @@ export function applyColorAccent() {
 applyColorAccent();
 
 // Incognito Mode Logic
-const isIncognito = localStorage.getItem("mori_incognito") === "true";
+const isIncognito = localStorage.getItem("rysav_incognito") === "true";
 if (incognitoToggle) {
   incognitoToggle.checked = isIncognito;
   incognitoToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_incognito", e.target.checked);
+    localStorage.setItem("rysav_incognito", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked
@@ -86,11 +86,11 @@ if (incognitoToggle) {
 }
 
 // Data Saver Mode Logic
-const isDataSaver = localStorage.getItem("mori_data_saver") === "true";
+const isDataSaver = localStorage.getItem("rysav_data_saver") === "true";
 if (autoPasteToggle) {
-  autoPasteToggle.checked = localStorage.getItem("mori_auto_paste") !== "false";
+  autoPasteToggle.checked = localStorage.getItem("rysav_auto_paste") !== "false";
   autoPasteToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_paste", e.target.checked);
+    localStorage.setItem("rysav_auto_paste", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -103,7 +103,7 @@ if (autoPasteToggle) {
 if (dataSaverToggle) {
   dataSaverToggle.checked = isDataSaver;
   dataSaverToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_data_saver", e.target.checked);
+    localStorage.setItem("rysav_data_saver", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked
@@ -116,9 +116,9 @@ if (dataSaverToggle) {
 
 if (autoClearHistoryToggle) {
   autoClearHistoryToggle.checked =
-    localStorage.getItem("mori_autoclear_history") === "true";
+    localStorage.getItem("rysav_autoclear_history") === "true";
   autoClearHistoryToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_autoclear_history", e.target.checked);
+    localStorage.setItem("rysav_autoclear_history", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked
@@ -137,9 +137,9 @@ if (!isNativePlatform) {
 
 // Wi-Fi Only Toggle
 if (wifiOnlyToggle) {
-  wifiOnlyToggle.checked = localStorage.getItem("mori_wifi_only") === "true";
+  wifiOnlyToggle.checked = localStorage.getItem("rysav_wifi_only") === "true";
   wifiOnlyToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_wifi_only", e.target.checked);
+    localStorage.setItem("rysav_wifi_only", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked ? lang["toast-wifi-on"] : lang["toast-wifi-off"],
@@ -150,9 +150,9 @@ if (wifiOnlyToggle) {
 // Auto-Download Toggle
 if (autoDownloadToggle) {
   autoDownloadToggle.checked =
-    localStorage.getItem("mori_auto_download") === "true";
+    localStorage.getItem("rysav_auto_download") === "true";
   autoDownloadToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_download", e.target.checked);
+    localStorage.setItem("rysav_auto_download", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked
@@ -170,7 +170,7 @@ function setupCustomSelect(selectId, storageKey, textId, menuId) {
   if (!select || !text || !menu) return;
 
   const defaultFallback =
-    storageKey === "mori_prefer_server" ? "ask" : "default";
+    storageKey === "rysav_prefer_server" ? "ask" : "default";
   const currentVal = localStorage.getItem(storageKey) || defaultFallback;
 
   // Update display on load
@@ -217,9 +217,9 @@ function setupCustomSelect(selectId, storageKey, textId, menuId) {
       menu.classList.add("hidden");
       menu.classList.remove("open-up"); // Clean up on selection
 
-      if (storageKey === "mori_accent") applyColorAccent();
-      if (storageKey === "mori_font") applyFont();
-      if (storageKey === "mori_lang") switchLanguage(val);
+      if (storageKey === "rysav_accent") applyColorAccent();
+      if (storageKey === "rysav_font") applyFont();
+      if (storageKey === "rysav_lang") switchLanguage(val);
 
       const labelText =
         select.closest(".settings-item")?.querySelector(".settings-title span")
@@ -232,58 +232,58 @@ function setupCustomSelect(selectId, storageKey, textId, menuId) {
 // Initialize Dropdowns
 setupCustomSelect(
   "languageSelect",
-  "mori_lang",
+  "rysav_lang",
   "currentLangDisplay",
   "languageMenu",
 );
 setupCustomSelect(
   "filenameSelect",
-  "mori_filename",
+  "rysav_filename",
   "filenameText",
   "filenameMenu",
 );
 
-setupCustomSelect("fontSelect", "mori_font", "fontText", "fontMenu");
+setupCustomSelect("fontSelect", "rysav_font", "fontText", "fontMenu");
 setupCustomSelect(
   "historyLimitSelect",
-  "mori_history_limit",
+  "rysav_history_limit",
   "historyLimitText",
   "historyLimitMenu",
 );
 setupCustomSelect(
   "autoClearDaysSelect",
-  "mori_auto_clear_days",
+  "rysav_auto_clear_days",
   "autoClearDaysText",
   "autoClearDaysMenu",
 );
 setupCustomSelect(
   "autoClearCacheDaysSelect",
-  "mori_auto_clear_cache_days",
+  "rysav_auto_clear_cache_days",
   "autoClearCacheDaysText",
   "autoClearCacheDaysMenu",
 );
 
 setupCustomSelect(
   "preferServerSelect",
-  "mori_prefer_server",
+  "rysav_prefer_server",
   "preferServerText",
   "preferServerMenu",
 );
 setupCustomSelect(
   "batchPhotoModeSelect",
-  "mori_batch_photo_mode",
+  "rysav_batch_photo_mode",
   "batchPhotoModeText",
   "batchPhotoModeMenu",
 );
 setupCustomSelect(
   "userAgentSelect",
-  "mori_user_agent",
+  "rysav_user_agent",
   "userAgentText",
   "userAgentMenu",
 );
 setupCustomSelect(
   "requestTimeoutSelect",
-  "mori_request_timeout",
+  "rysav_request_timeout",
   "requestTimeoutText",
   "requestTimeoutMenu",
 );
@@ -292,9 +292,9 @@ setupCustomSelect(
 const autoAnalyzeToggle = document.getElementById("autoAnalyzeToggle");
 if (autoAnalyzeToggle) {
   autoAnalyzeToggle.checked =
-    localStorage.getItem("mori_auto_analyze") === "true";
+    localStorage.getItem("rysav_auto_analyze") === "true";
   autoAnalyzeToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_analyze", e.target.checked);
+    localStorage.setItem("rysav_auto_analyze", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -307,9 +307,9 @@ if (autoAnalyzeToggle) {
 const autoClearInputToggle = document.getElementById("autoClearInputToggle");
 if (autoClearInputToggle) {
   autoClearInputToggle.checked =
-    localStorage.getItem("mori_auto_clear_input") === "true";
+    localStorage.getItem("rysav_auto_clear_input") === "true";
   autoClearInputToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_clear_input", e.target.checked);
+    localStorage.setItem("rysav_auto_clear_input", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -322,9 +322,9 @@ if (autoClearInputToggle) {
 const downloadSoundToggle = document.getElementById("downloadSoundToggle");
 if (downloadSoundToggle) {
   downloadSoundToggle.checked =
-    localStorage.getItem("mori_download_sound") !== "false";
+    localStorage.getItem("rysav_download_sound") !== "false";
   downloadSoundToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_download_sound", e.target.checked);
+    localStorage.setItem("rysav_download_sound", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -338,9 +338,9 @@ if (downloadSoundToggle) {
 
 const autoRetryToggle = document.getElementById("autoRetryToggle");
 if (autoRetryToggle) {
-  autoRetryToggle.checked = localStorage.getItem("mori_auto_retry") !== "false";
+  autoRetryToggle.checked = localStorage.getItem("rysav_auto_retry") !== "false";
   autoRetryToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_retry", e.target.checked);
+    localStorage.setItem("rysav_auto_retry", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -352,9 +352,9 @@ if (autoRetryToggle) {
 
 const hapticToggle = document.getElementById("hapticToggle");
 if (hapticToggle) {
-  hapticToggle.checked = localStorage.getItem("mori_haptic") !== "false";
+  hapticToggle.checked = localStorage.getItem("rysav_haptic") !== "false";
   hapticToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_haptic", e.target.checked);
+    localStorage.setItem("rysav_haptic", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -367,9 +367,9 @@ if (hapticToggle) {
 const autoFolderToggle = document.getElementById("autoFolderToggle");
 if (autoFolderToggle) {
   autoFolderToggle.checked =
-    localStorage.getItem("mori_auto_folder") === "true";
+    localStorage.getItem("rysav_auto_folder") === "true";
   autoFolderToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_folder", e.target.checked);
+    localStorage.setItem("rysav_auto_folder", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -381,9 +381,9 @@ if (autoFolderToggle) {
 
 const keepAwakeToggle = document.getElementById("keepAwakeToggle");
 if (keepAwakeToggle) {
-  keepAwakeToggle.checked = localStorage.getItem("mori_keep_awake") === "true";
+  keepAwakeToggle.checked = localStorage.getItem("rysav_keep_awake") === "true";
   keepAwakeToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_keep_awake", e.target.checked);
+    localStorage.setItem("rysav_keep_awake", e.target.checked);
     if (e.target.checked) requestWakeLock();
     else releaseWakeLock();
     const lang = translations[currentLang] || translations.en;
@@ -398,9 +398,9 @@ if (keepAwakeToggle) {
 const autoUpdateToggle = document.getElementById("autoUpdateToggle");
 if (autoUpdateToggle) {
   autoUpdateToggle.checked =
-    localStorage.getItem("mori_auto_update") !== "false";
+    localStorage.getItem("rysav_auto_update") !== "false";
   autoUpdateToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_update", e.target.checked);
+    localStorage.setItem("rysav_auto_update", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -412,9 +412,9 @@ if (autoUpdateToggle) {
 
 const forceIpv4Toggle = document.getElementById("forceIpv4Toggle");
 if (forceIpv4Toggle) {
-  forceIpv4Toggle.checked = localStorage.getItem("mori_force_ipv4") === "true";
+  forceIpv4Toggle.checked = localStorage.getItem("rysav_force_ipv4") === "true";
   forceIpv4Toggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_force_ipv4", e.target.checked);
+    localStorage.setItem("rysav_force_ipv4", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -427,9 +427,9 @@ if (forceIpv4Toggle) {
 const headerSpoofingToggle = document.getElementById("headerSpoofingToggle");
 if (headerSpoofingToggle) {
   headerSpoofingToggle.checked =
-    localStorage.getItem("mori_header_spoofing") !== "false";
+    localStorage.getItem("rysav_header_spoofing") !== "false";
   headerSpoofingToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_header_spoofing", e.target.checked);
+    localStorage.setItem("rysav_header_spoofing", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -442,9 +442,9 @@ if (headerSpoofingToggle) {
 const cellularWarningToggle = document.getElementById("cellularWarningToggle");
 if (cellularWarningToggle) {
   cellularWarningToggle.checked =
-    localStorage.getItem("mori_cellular_warning") === "true";
+    localStorage.getItem("rysav_cellular_warning") === "true";
   cellularWarningToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_cellular_warning", e.target.checked);
+    localStorage.setItem("rysav_cellular_warning", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -456,9 +456,9 @@ if (cellularWarningToggle) {
 
 const bypassSslToggle = document.getElementById("bypassSslToggle");
 if (bypassSslToggle) {
-  bypassSslToggle.checked = localStorage.getItem("mori_bypass_ssl") === "true";
+  bypassSslToggle.checked = localStorage.getItem("rysav_bypass_ssl") === "true";
   bypassSslToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_bypass_ssl", e.target.checked);
+    localStorage.setItem("rysav_bypass_ssl", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -479,7 +479,7 @@ if (testLatencyBtn) {
       if (CapacitorHttp) {
         await CapacitorHttp.get({
           url: "https://api.github.com/zen",
-          headers: { "User-Agent": "Mori-App" },
+          headers: { "User-Agent": "RYSAV-App" },
         });
       } else {
         await fetch("https://api.github.com/zen");
@@ -497,7 +497,7 @@ if (testLatencyBtn) {
 // Font Switching Logic
 export function applyFont() {
   if (!document.body) return;
-  const font = localStorage.getItem("mori_font") || "default";
+  const font = localStorage.getItem("rysav_font") || "default";
   document.body.className = (document.body.className || "").replace(
     /\bfont-\S+/g,
     "",
@@ -510,9 +510,9 @@ applyFont();
 
 // Auto-Play Toggle
 if (autoPlayToggle) {
-  autoPlayToggle.checked = localStorage.getItem("mori_autoplay") !== "false";
+  autoPlayToggle.checked = localStorage.getItem("rysav_autoplay") !== "false";
   autoPlayToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_autoplay", e.target.checked);
+    localStorage.setItem("rysav_autoplay", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -523,9 +523,9 @@ if (autoPlayToggle) {
 }
 
 if (autoLoopToggle) {
-  autoLoopToggle.checked = localStorage.getItem("mori_loop") !== "false";
+  autoLoopToggle.checked = localStorage.getItem("rysav_loop") !== "false";
   autoLoopToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_loop", e.target.checked);
+    localStorage.setItem("rysav_loop", e.target.checked);
     const lang = translations[currentLang] || translations.en;
     showToast(
       e.target.checked
@@ -549,7 +549,7 @@ document.addEventListener("click", (e) => {
 });
 
 // Download Path Logic (Video)
-export let customPath = localStorage.getItem("mori_download_path") || "Mori";
+export let customPath = localStorage.getItem("rysav_download_path") || "RYSAV";
 if (pathVal) pathVal.textContent = `/Download/${customPath}`;
 
 changePathBtn?.addEventListener("click", () => {
@@ -559,15 +559,15 @@ changePathBtn?.addEventListener("click", () => {
     `<div class="path-picker-ui">
        <div class="path-input-wrapper">
          <span class="path-label-sm">Subfolder in Downloads</span>
-         <div class="mori-input-with-icon">
+         <div class="rysav-input-with-icon">
            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-           <input type="text" id="customPathInput" class="mori-input-noborder" value="${customPath}" placeholder="e.g. Mori">
+           <input type="text" id="customPathInput" class="rysav-input-noborder" value="${customPath}" placeholder="e.g. RYSAV">
          </div>
        </div>
        <span class="path-label-sm">${lang["label-path-presets"]}</span>
        <div class="path-presets-container">
-         <button class="path-preset-chip" data-path="Mori">Mori</button>
-         <button class="path-preset-chip" data-path="Mori/Videos">Mori/Videos</button>
+         <button class="path-preset-chip" data-path="RYSAV">RYSAV</button>
+         <button class="path-preset-chip" data-path="RYSAV/Videos">RYSAV/Videos</button>
        </div>
        <button id="resetPathBtn" class="reset-path-btn">${lang["btn-reset-default"]}</button>
      </div>`,
@@ -576,7 +576,7 @@ changePathBtn?.addEventListener("click", () => {
       if (input && input.value.trim()) {
         const newPath = input.value.trim().replace(/[\\:*?"<>|]/g, "");
         customPath = newPath;
-        localStorage.setItem("mori_download_path", newPath);
+        localStorage.setItem("rysav_download_path", newPath);
         if (pathVal) pathVal.textContent = `/Download/${newPath}`;
         showToast(lang["toast-path-updated"]);
       }
@@ -590,7 +590,7 @@ changePathBtn?.addEventListener("click", () => {
       });
     });
     document.getElementById("resetPathBtn")?.addEventListener("click", () => {
-      if (input) input.value = "Mori";
+      if (input) input.value = "RYSAV";
     });
   }, 100);
   okConfirmBtn.textContent = "SAVE";
@@ -598,7 +598,7 @@ changePathBtn?.addEventListener("click", () => {
 
 // Download Path Logic (Music)
 export let customMusicPath =
-  localStorage.getItem("mori_music_path") || "Mori/Music";
+  localStorage.getItem("rysav_music_path") || "RYSAV/Music";
 if (musicPathVal) musicPathVal.textContent = `/Download/${customMusicPath}`;
 
 changeMusicPathBtn?.addEventListener("click", () => {
@@ -608,14 +608,14 @@ changeMusicPathBtn?.addEventListener("click", () => {
     `<div class="path-picker-ui">
        <div class="path-input-wrapper">
          <span class="path-label-sm">Subfolder in Downloads</span>
-         <div class="mori-input-with-icon">
+         <div class="rysav-input-with-icon">
            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-           <input type="text" id="customMusicPathInput" class="mori-input-noborder" value="${customMusicPath}" placeholder="e.g. Mori/Music">
+           <input type="text" id="customMusicPathInput" class="rysav-input-noborder" value="${customMusicPath}" placeholder="e.g. RYSAV/Music">
          </div>
        </div>
        <span class="path-label-sm">${lang["label-path-presets"]}</span>
        <div class="path-presets-container">
-         <button class="path-preset-chip" data-path="Mori/Music">Mori/Music</button>
+         <button class="path-preset-chip" data-path="RYSAV/Music">RYSAV/Music</button>
          <button class="path-preset-chip" data-path="Music">Music</button>
        </div>
        <button id="resetMusicPathBtn" class="reset-path-btn">${lang["btn-reset-default"]}</button>
@@ -625,7 +625,7 @@ changeMusicPathBtn?.addEventListener("click", () => {
       if (input && input.value.trim()) {
         const newPath = input.value.trim().replace(/[\\:*?"<>|]/g, "");
         customMusicPath = newPath;
-        localStorage.setItem("mori_music_path", newPath);
+        localStorage.setItem("rysav_music_path", newPath);
         if (musicPathVal) musicPathVal.textContent = `/Download/${newPath}`;
         showToast(lang["toast-path-updated"]);
       }
@@ -641,18 +641,18 @@ changeMusicPathBtn?.addEventListener("click", () => {
     document
       .getElementById("resetMusicPathBtn")
       ?.addEventListener("click", () => {
-        if (input) input.value = "Mori/Music";
+        if (input) input.value = "RYSAV/Music";
       });
   }, 100);
   okConfirmBtn.textContent = "SAVE";
 });
 
 // Auto Clear Cache Logic
-const isAutoClear = localStorage.getItem("mori_auto_clear_cache") === "true";
+const isAutoClear = localStorage.getItem("rysav_auto_clear_cache") === "true";
 if (autoClearToggle) {
   autoClearToggle.checked = isAutoClear;
   autoClearToggle.addEventListener("change", (e) => {
-    localStorage.setItem("mori_auto_clear_cache", e.target.checked);
+    localStorage.setItem("rysav_auto_clear_cache", e.target.checked);
     const lang = translations[currentLang];
     showToast(
       e.target.checked
@@ -675,7 +675,7 @@ if (isAutoClear) {
 export async function clearCacheSilently() {
   if (!Filesystem) return;
   try {
-    const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    const history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
     const activeThumbs = new Set(
       history
         .map((item) => item.thumbnail)
@@ -731,30 +731,30 @@ export async function clearCacheSilently() {
 export function updateCustomSelectsUI() {
   const lang = translations[currentLang] || translations.en;
 
-  const currentFilename = localStorage.getItem("mori_filename") || "title";
+  const currentFilename = localStorage.getItem("rysav_filename") || "title";
   const filenameText = document.getElementById("filenameText");
   if (filenameText)
     filenameText.textContent =
       lang[`filename-${currentFilename}`] || currentFilename;
 
-  const currentUA = localStorage.getItem("mori_user_agent") || "default";
+  const currentUA = localStorage.getItem("rysav_user_agent") || "default";
   const userAgentText = document.getElementById("userAgentText");
   if (userAgentText)
     userAgentText.textContent = lang[`ua-${currentUA}`] || currentUA;
 
-  const currentTimeout = localStorage.getItem("mori_request_timeout") || "30";
+  const currentTimeout = localStorage.getItem("rysav_request_timeout") || "30";
   const requestTimeoutText = document.getElementById("requestTimeoutText");
   if (requestTimeoutText)
     requestTimeoutText.textContent =
       lang[`timeout-${currentTimeout}`] || `${currentTimeout}s`;
 
-  const currentServer = localStorage.getItem("mori_prefer_server") || "ask";
+  const currentServer = localStorage.getItem("rysav_prefer_server") || "ask";
   const preferServerText = document.getElementById("preferServerText");
   if (preferServerText)
     preferServerText.textContent =
       lang[`server-${currentServer}`] || currentServer;
 
-  const currentFont = localStorage.getItem("mori_font") || "default";
+  const currentFont = localStorage.getItem("rysav_font") || "default";
   const fontText = document.getElementById("fontText");
   if (fontText)
     fontText.textContent =
@@ -764,21 +764,21 @@ export function updateCustomSelectsUI() {
         : currentFont);
 
   const currentLimit =
-    localStorage.getItem("mori_history_limit") || "unlimited";
+    localStorage.getItem("rysav_history_limit") || "unlimited";
   const historyLimitText = document.getElementById("historyLimitText");
   if (historyLimitText)
     historyLimitText.textContent =
       lang[`history-${currentLimit}`] || currentLimit;
 
   const currentClearDays =
-    localStorage.getItem("mori_auto_clear_days") || "off";
+    localStorage.getItem("rysav_auto_clear_days") || "off";
   const autoClearDaysText = document.getElementById("autoClearDaysText");
   if (autoClearDaysText)
     autoClearDaysText.textContent =
       lang[`days-${currentClearDays}`] || currentClearDays;
 
   const currentCacheDays =
-    localStorage.getItem("mori_auto_clear_cache_days") || "off";
+    localStorage.getItem("rysav_auto_clear_cache_days") || "off";
   const autoClearCacheDaysText = document.getElementById(
     "autoClearCacheDaysText",
   );
@@ -786,7 +786,7 @@ export function updateCustomSelectsUI() {
     autoClearCacheDaysText.textContent =
       lang[`days-${currentCacheDays}`] || currentCacheDays;
 
-  const currentBackup = localStorage.getItem("mori_auto_backup") || "off";
+  const currentBackup = localStorage.getItem("rysav_auto_backup") || "off";
   const autoBackupText = document.getElementById("autoBackupText");
   if (autoBackupText) {
     if (currentBackup === "off")
@@ -830,12 +830,12 @@ updateLanguageUI();
 updateStorageInfo();
 
 export function checkAutoClearDays() {
-  const daysVal = localStorage.getItem("mori_auto_clear_days") || "off";
+  const daysVal = localStorage.getItem("rysav_auto_clear_days") || "off";
   if (daysVal === "off") return;
   const days = parseInt(daysVal, 10);
   if (isNaN(days) || days <= 0) return;
   const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("rysav_history") || "[]");
   const initialCount = history.length;
   const filtered = history.filter((item) => {
     const time =
@@ -843,7 +843,7 @@ export function checkAutoClearDays() {
     return time === 0 || time >= cutoff;
   });
   if (filtered.length !== initialCount) {
-    localStorage.setItem("mori_history", JSON.stringify(filtered));
+    localStorage.setItem("rysav_history", JSON.stringify(filtered));
   }
 }
 
@@ -871,9 +871,9 @@ export async function updateStorageInfo() {
   try {
     let totalSize = 0;
     totalSize += await getFolderSize("", "CACHE");
-    totalSize += await getFolderSize("Download/Mori", "EXTERNAL_STORAGE");
+    totalSize += await getFolderSize("Download/RYSAV", "EXTERNAL_STORAGE");
     // Also check old location for compatibility
-    totalSize += await getFolderSize("Download/Mori", "EXTERNAL");
+    totalSize += await getFolderSize("Download/RYSAV", "EXTERNAL");
 
     const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
     storageVal.textContent = `${sizeInMB} MB`;
@@ -885,7 +885,7 @@ export async function updateStorageInfo() {
 
 export function switchLanguage(lang) {
   setCurrentLang(lang);
-  localStorage.setItem("mori_lang", lang);
+  localStorage.setItem("rysav_lang", lang);
   setUIState({ currentLang });
   setUtilsState({ currentLang });
   updateLanguageUI();
@@ -953,17 +953,17 @@ wipeDataBtn?.addEventListener("click", () => {
     async () => {
       try {
         // Preserve some settings
-        const lang = localStorage.getItem("mori_lang");
-        const theme = localStorage.getItem("mori_theme");
-        const vPath = localStorage.getItem("mori_download_path");
-        const mPath = localStorage.getItem("mori_music_path");
+        const lang = localStorage.getItem("rysav_lang");
+        const theme = localStorage.getItem("rysav_theme");
+        const vPath = localStorage.getItem("rysav_download_path");
+        const mPath = localStorage.getItem("rysav_music_path");
 
         localStorage.clear();
 
-        if (lang) localStorage.setItem("mori_lang", lang);
-        if (theme) localStorage.setItem("mori_theme", theme);
-        if (vPath) localStorage.setItem("mori_download_path", vPath);
-        if (mPath) localStorage.setItem("mori_music_path", mPath);
+        if (lang) localStorage.setItem("rysav_lang", lang);
+        if (theme) localStorage.setItem("rysav_theme", theme);
+        if (vPath) localStorage.setItem("rysav_download_path", vPath);
+        if (mPath) localStorage.setItem("rysav_music_path", mPath);
 
         if (Filesystem) {
           try {
@@ -994,7 +994,7 @@ wipeDataBtn?.addEventListener("click", () => {
 reportBugBtn?.addEventListener("click", () => {
   const deviceInfo = `Model: ${navigator.userAgent}\nPlatform: ${platformVal?.textContent || "Unknown"}\nVersion: ${APP_VERSION}`;
   const text = encodeURIComponent(
-    `Hi coflyn, I found a bug in Mori App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
+    `Hi coflyn, I found a bug in RYSAV App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
   );
   const whatsappUrl = `whatsapp://send?phone=6285194858996&text=${text}`;
   const whatsappWebUrl = `https://wa.me/6285194858996?text=${text}`;

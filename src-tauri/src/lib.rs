@@ -81,14 +81,14 @@ async fn tauri_download_file(
     let bytes = res.bytes().await.map_err(|e| format!("Download body error: {}", e))?;
 
     let download_dir = dirs::download_dir().unwrap_or_else(|| std::path::PathBuf::from("."));
-    let mut target_dir = download_dir.join("Mori");
+    let mut target_dir = download_dir.join("RYSAV");
 
     if let Some(f) = folder {
         let trimmed = f.trim();
         if !trimmed.is_empty() {
-            if trimmed.starts_with("Mori/") || trimmed.starts_with("Mori\\") {
+            if trimmed.starts_with("RYSAV/") || trimmed.starts_with("RYSAV\\") {
                 target_dir = download_dir.join(trimmed);
-            } else if trimmed != "Mori" {
+            } else if trimmed != "RYSAV" {
                 target_dir = target_dir.join(trimmed);
             }
         }
@@ -99,7 +99,7 @@ async fn tauri_download_file(
 
     if target_file.exists() {
         let p = std::path::Path::new(&filename);
-        let stem = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Media");
+        let stem = p.file_stem().and_then(|s| s.to_str()).unwrap_or("RYSAV_Media");
         let ext = p.extension().and_then(|s| s.to_str()).unwrap_or("mp4");
 
         let mut counter = 1;
@@ -155,10 +155,10 @@ async fn tauri_read_file_bytes(path: String) -> Result<Vec<u8>, String> {
     let target = if rel_path.starts_with("Downloads/") || rel_path.starts_with("downloads/") {
         let parent = download_dir.parent().unwrap_or(&download_dir);
         parent.join(rel_path)
-    } else if rel_path.starts_with("Mori/") {
+    } else if rel_path.starts_with("RYSAV/") {
         download_dir.join(rel_path)
     } else {
-        download_dir.join("Mori").join(rel_path)
+        download_dir.join("RYSAV").join(rel_path)
     };
 
     if let Ok(bytes) = std::fs::read(&target) {
@@ -211,14 +211,14 @@ async fn tauri_save_bytes_file(
     folder: Option<String>,
 ) -> Result<String, String> {
     let download_dir = dirs::download_dir().unwrap_or_else(|| std::path::PathBuf::from("."));
-    let mut target_dir = download_dir.join("Mori");
+    let mut target_dir = download_dir.join("RYSAV");
 
     if let Some(f) = folder {
         let trimmed = f.trim();
         if !trimmed.is_empty() {
-            if trimmed.starts_with("Mori/") || trimmed.starts_with("Mori\\") {
+            if trimmed.starts_with("RYSAV/") || trimmed.starts_with("RYSAV\\") {
                 target_dir = download_dir.join(trimmed);
-            } else if trimmed != "Mori" {
+            } else if trimmed != "RYSAV" {
                 target_dir = target_dir.join(trimmed);
             }
         }
@@ -229,7 +229,7 @@ async fn tauri_save_bytes_file(
 
     if target_file.exists() {
         let p = std::path::Path::new(&filename);
-        let stem = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Document");
+        let stem = p.file_stem().and_then(|s| s.to_str()).unwrap_or("RYSAV_Document");
         let ext = p.extension().and_then(|s| s.to_str()).unwrap_or("pdf");
 
         let mut counter = 1;

@@ -1,6 +1,6 @@
 {
-  "appId": "com.mori.downloader",
-  "appName": "Mori",
+  "appId": "com.rysav.downloader",
+  "appName": "RYSAV",
   "webDir": "public",
   "plugins": {
     "CapacitorHttp": {
