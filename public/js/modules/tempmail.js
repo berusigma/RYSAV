@@ -1,49 +1,17 @@
 /**
- * tempmail.js — Redesigned Temp Mail module with Server Separation & Account Management
+ * tempmail.js — Clean, Modern Temp Mail module powered exclusively by Mail.tm API
  */
 import { showToast, triggerHaptic } from "../utils/index.js";
 
-const DOMAINS_SERVER_2 = [
-  "@gmail10p.com",
-  "@oletters.com",
-  "@oemails.com",
-  "@oegmail.com",
-  "@suiemail.com",
-  "@voewo.com",
-  "@yanemail.com",
-];
-
-const SERVER1_API = "https://api.mail.tm";
+const MAIL_API = "https://api.mail.tm";
 const MAIL_PASS = "RysavMail2026!Secure";
 
-let currentServer = localStorage.getItem("rysav_temp_server") || "server1";
 let currentEmail = localStorage.getItem("rysav_temp_email") || null;
 let currentToken = localStorage.getItem("rysav_temp_token") || null;
 let currentAccountId = localStorage.getItem("rysav_temp_id") || null;
 
 let pollingInterval = null;
 let totalMessagesCount = 0;
-
-function encPayload(obj) {
-  try {
-    const str = JSON.stringify(obj);
-    const b64 = btoa(unescape(encodeURIComponent(str)));
-    return b64.split("").reverse().join("");
-  } catch (e) {
-    return "";
-  }
-}
-
-function decPayload(str) {
-  try {
-    if (!str) return {};
-    const rev = String(str).split("").reverse().join("");
-    const decodedStr = decodeURIComponent(escape(atob(rev)));
-    return JSON.parse(decodedStr);
-  } catch (e) {
-    return {};
-  }
-}
 
 function generateRandomName() {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -56,13 +24,9 @@ function generateRandomName() {
 
 export function renderActiveEmailBanner() {
   const emailDisplay = document.getElementById("tempActiveEmailDisplay");
-  const serverTag = document.getElementById("tempActiveServerTag");
 
   if (emailDisplay) {
-    emailDisplay.textContent = currentEmail || "No Active Email";
-  }
-  if (serverTag) {
-    serverTag.textContent = currentServer === "server2" ? "Server 2 (Custom)" : "Server 1 (Fast)";
+    emailDisplay.textContent = currentEmail || "Belum Ada Email Aktif";
   }
   renderSavedAccountsBar();
 }
@@ -73,15 +37,15 @@ function renderSavedAccountsBar() {
 
   const history = JSON.parse(localStorage.getItem("rysav_mail_history") || "[]");
   if (history.length === 0) {
-    container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-secondary);">No saved emails yet.</span>`;
+    container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-secondary);">Belum ada riwayat email.</span>`;
     return;
   }
 
   container.innerHTML = history.map((acc) => {
     const isActive = acc.email === currentEmail;
     return `
-      <div class="stat-pill ${isActive ? "active-account-pill" : ""}" style="font-size:0.75rem; padding:4px 10px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; ${isActive ? "background:var(--primary); color:var(--on-primary);" : ""}">
-        <span class="btn-switch-account" data-email="${acc.email}" data-token="${acc.token || ""}" data-id="${acc.id || ""}" data-server="${acc.server || "server1"}">${escapeHtml(acc.email)}</span>
+      <div class="stat-pill ${isActive ? "active-account-pill" : ""}" style="font-size:0.75rem; padding:5px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border-radius:20px; transition: all 0.2s ease; ${isActive ? "background:var(--primary); color:var(--on-primary); font-weight:700;" : "background:var(--surface);"}" >
+        <span class="btn-switch-account" data-email="${acc.email}" data-token="${acc.token || ""}" data-id="${acc.id || ""}">${escapeHtml(acc.email)}</span>
         <span class="btn-del-account" data-email="${acc.email}" style="opacity:0.7; font-weight:bold; cursor:pointer; padding:0 2px;">✕</span>
       </div>
     `;
@@ -92,10 +56,9 @@ function renderSavedAccountsBar() {
       const email = el.getAttribute("data-email");
       const token = el.getAttribute("data-token");
       const id = el.getAttribute("data-id");
-      const server = el.getAttribute("data-server");
-      setSession(email, token, id, server);
+      setSession(email, token, id);
       checkTempMailState();
-      showToast("Switched to email: " + email);
+      showToast("Beralih ke email: " + email);
     });
   });
 
@@ -116,12 +79,12 @@ export function deleteSavedAccount(emailToDelete) {
   if (currentEmail === emailToDelete) {
     if (history.length > 0) {
       const nextAcc = history[0];
-      setSession(nextAcc.email, nextAcc.token, nextAcc.id, nextAcc.server);
+      setSession(nextAcc.email, nextAcc.token, nextAcc.id);
     } else {
       clearSession();
     }
   }
-  showToast("Email deleted!");
+  showToast("Email berhasil dihapus!");
   checkTempMailState();
 }
 
@@ -134,21 +97,19 @@ function clearSession() {
   localStorage.removeItem("rysav_temp_id");
 }
 
-function setSession(email, token = null, id = null, server = currentServer) {
+function setSession(email, token = null, id = null) {
   currentEmail = email;
   currentToken = token;
   currentAccountId = id;
-  currentServer = server;
   localStorage.setItem("rysav_temp_email", email);
   localStorage.setItem("rysav_temp_token", token || "");
   localStorage.setItem("rysav_temp_id", id || "");
-  localStorage.setItem("rysav_temp_server", server);
 }
 
-function saveToHistory(email, token = null, id = null, server = currentServer) {
+function saveToHistory(email, token = null, id = null) {
   let history = JSON.parse(localStorage.getItem("rysav_mail_history") || "[]");
   history = history.filter((h) => h.email !== email);
-  history.unshift({ email, token, id, server });
+  history.unshift({ email, token, id });
   if (history.length > 10) history.pop();
   localStorage.setItem("rysav_mail_history", JSON.stringify(history));
 }
@@ -181,130 +142,75 @@ function updateNavBadges(count) {
   });
 }
 
-// Server 1 Email Generator
-export async function createServer1Email() {
-  const btn = document.getElementById("btnCreateServer1Email");
+// Generate New Email (Mail.tm API)
+export async function createNewEmail() {
+  const btn = document.getElementById("btnCreateEmail");
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Creating Server 1 Email...';
+    btn.innerHTML = '<span class="spinner"></span> Membuat Email...';
   }
 
   try {
-    const domRes = await fetch(`${SERVER1_API}/domains`);
+    const domRes = await fetch(`${MAIL_API}/domains`);
     const domData = await domRes.json();
     const domain = domData["hydra:member"]?.[0]?.domain || "mail.tm";
 
     const username = generateRandomName();
     const targetEmail = `${username}@${domain}`;
 
-    const accRes = await fetch(`${SERVER1_API}/accounts`, {
+    const accRes = await fetch(`${MAIL_API}/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: targetEmail, password: MAIL_PASS }),
     });
 
-    if (!accRes.ok) throw new Error("Failed to create Server 1 account.");
+    if (!accRes.ok) throw new Error("Gagal membuat akun email.");
     const accData = await accRes.json();
 
-    const tokRes = await fetch(`${SERVER1_API}/token`, {
+    const tokRes = await fetch(`${MAIL_API}/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: targetEmail, password: MAIL_PASS }),
     });
     const tokData = await tokRes.json();
 
-    setSession(targetEmail, tokData.token, accData.id, "server1");
-    saveToHistory(targetEmail, tokData.token, accData.id, "server1");
+    setSession(targetEmail, tokData.token, accData.id);
+    saveToHistory(targetEmail, tokData.token, accData.id);
 
-    showToast("Server 1 Email Created!");
+    showToast("Email Baru Berhasil Dibuat!");
     totalMessagesCount = 0;
     checkTempMailState();
   } catch (err) {
-    showToast(err.message || "Server 1 Error", "error");
+    showToast(err.message || "Gagal Koneksi API", "error");
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = "⚡ Generate Server 1 Email";
+      btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Generate Email Baru`;
     }
   }
 }
 
-// Server 2 Custom Email Generator
-export async function createServer2CustomEmail(customUsername, selectedDomain) {
-  const btn = document.getElementById("btnCreateServer2Email");
-  const username = (customUsername || "").trim();
-
-  if (!username) {
-    showToast("Please enter a custom username.", "error");
-    return;
-  }
-
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Creating Server 2 Custom Email...';
-  }
-
-  try {
-    const domain = selectedDomain || DOMAINS_SERVER_2[0];
-    const targetEmail = username.includes("@") ? username : `${username}${domain}`;
-
-    const payloadEnc = encPayload({ email: targetEmail });
-    const res = await fetch("https://mail-server.1timetech.com/api/email", {
-      method: "POST",
-      headers: {
-        "User-Agent": "okhttp/4.9.2",
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-        "x-app-key": "f07bed4503msh719c2010df3389fp1d6048jsn411a41a84a3c",
-      },
-      body: JSON.stringify({ data: payloadEnc }),
-    });
-
-    if (!res.ok) throw new Error("Server 2 Custom Email Creation failed.");
-
-    setSession(targetEmail, null, null, "server2");
-    saveToHistory(targetEmail, null, null, "server2");
-
-    showToast(`Server 2 Email Created: ${targetEmail}`);
-    totalMessagesCount = 0;
-    checkTempMailState();
-  } catch (err) {
-    showToast(err.message || "Server 2 Error", "error");
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = "✨ Create Custom Server 2 Email";
-    }
-  }
-}
-
-// Manual Login
+// Manual Login to existing Mail.tm address
 export async function loginExistingEmail(emailInput) {
   const email = (emailInput || "").trim();
   if (!email || !email.includes("@")) {
-    showToast("Please enter a valid email address.", "error");
+    showToast("Masukkan alamat email yang valid.", "error");
     return;
   }
 
   try {
-    if (currentServer === "server2") {
-      setSession(email, null, null, "server2");
-      saveToHistory(email, null, null, "server2");
-      showToast("Logged in to " + email);
-    } else {
-      const tokRes = await fetch(`${SERVER1_API}/token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: email, password: MAIL_PASS }),
-      });
+    const tokRes = await fetch(`${MAIL_API}/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: email, password: MAIL_PASS }),
+    });
 
-      if (!tokRes.ok) throw new Error("Email not found on Server 1.");
-      const tokData = await tokRes.json();
+    if (!tokRes.ok) throw new Error("Alamat email tidak ditemukan di server.");
+    const tokData = await tokRes.json();
 
-      setSession(email, tokData.token, tokData.id, "server1");
-      saveToHistory(email, tokData.token, tokData.id, "server1");
-      showToast("Logged in to " + email);
-    }
+    setSession(email, tokData.token, tokData.id);
+    saveToHistory(email, tokData.token, tokData.id);
+    showToast("Berhasil login ke: " + email);
 
     totalMessagesCount = 0;
     checkTempMailState();
@@ -313,7 +219,7 @@ export async function loginExistingEmail(emailInput) {
   }
 }
 
-// Polling & Inbox Fetch
+// Polling & Inbox Fetching
 function startPolling() {
   if (pollingInterval) clearInterval(pollingInterval);
   fetchInboxMessages();
@@ -321,63 +227,33 @@ function startPolling() {
 }
 
 export async function fetchInboxMessages() {
-  if (!currentEmail) return;
+  if (!currentEmail || !currentToken) return;
   const pulse = document.getElementById("tempPulseDot");
   const msgCounter = document.getElementById("tempMsgCounter");
   if (pulse) pulse.style.background = "var(--primary)";
 
   try {
-    let messages = [];
+    const res = await fetch(`${MAIL_API}/messages`, {
+      headers: { Authorization: `Bearer ${currentToken}` },
+    });
+    if (!res.ok) return;
 
-    if (currentServer === "server2") {
-      const safeEmail = currentEmail.replace(/@/g, "_").replace(/\./g, "_");
-      const paramsEnc = encPayload({});
-      const listUrl = `https://mail-server.1timetech.com/api/email/${safeEmail}/messages?params=${paramsEnc}`;
-      const listRes = await fetch(listUrl, {
-        headers: {
-          "User-Agent": "okhttp/4.9.2",
-          Accept: "application/json, text/plain, */*",
-          "x-app-key": "f07bed4503msh719c2010df3389fp1d6048jsn411a41a84a3c",
-        },
-      });
-      if (listRes.ok) {
-        const listJson = await listRes.json();
-        const rawMsgs = decPayload(listJson.data || "[]");
-        if (Array.isArray(rawMsgs)) {
-          messages = rawMsgs.map((m) => ({
-            id: m.id || m.message_id || Math.random().toString(),
-            from: m.from || m.sender || "Unknown",
-            subject: m.subject || "(No Subject)",
-            intro: m.intro || m.text || "",
-            createdAt: m.date || m.created_at || new Date().toISOString(),
-            raw: m,
-          }));
-        }
-      }
-    } else {
-      if (!currentToken) return;
-      const res = await fetch(`${SERVER1_API}/messages`, {
-        headers: { Authorization: `Bearer ${currentToken}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const memberMsgs = data["hydra:member"] || [];
-        messages = memberMsgs.map((m) => ({
-          id: m.id,
-          from: m.from?.address || "Unknown",
-          subject: m.subject || "(No Subject)",
-          intro: m.intro || "",
-          createdAt: m.createdAt,
-          raw: m,
-        }));
-      }
-    }
+    const data = await res.json();
+    const memberMsgs = data["hydra:member"] || [];
+    const messages = memberMsgs.map((m) => ({
+      id: m.id,
+      from: m.from?.address || m.from?.name || "Pengirim",
+      subject: m.subject || "(Tanpa Subjek)",
+      intro: m.intro || "",
+      createdAt: m.createdAt,
+      raw: m,
+    }));
 
     if (msgCounter) msgCounter.textContent = messages.length;
 
     if (messages.length > totalMessagesCount) {
       triggerHaptic("heavy");
-      showToast(`New email received! (${messages.length})`, "success");
+      showToast(`Pesan baru diterima! (${messages.length})`, "success");
       updateNavBadges(messages.length);
     }
     totalMessagesCount = messages.length;
@@ -396,9 +272,12 @@ function renderInboxList(messages) {
 
   if (messages.length === 0) {
     container.innerHTML = `
-      <div class="empty-inbox">
-        <div style="font-size:2rem; margin-bottom:6px; opacity:0.6;">📭</div>
-        <p>No messages in inbox yet.</p>
+      <div style="text-align: center; padding: 32px 16px;">
+        <svg style="width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.4;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500;">Inbox kosong. Menunggu email masuk...</p>
       </div>
     `;
     return;
@@ -408,19 +287,31 @@ function renderInboxList(messages) {
   messages.forEach((msg) => {
     const card = document.createElement("div");
     card.className = "msg-card";
+    card.style.cssText = "padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease;";
+
     const date = new Date(msg.createdAt);
     const timeStr = isNaN(date.getTime())
       ? ""
       : `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
     card.innerHTML = `
-      <div class="msg-card-header">
-        <span class="msg-sender">${escapeHtml(msg.from)}</span>
-        <span class="msg-time">${timeStr}</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${escapeHtml(msg.from)}</span>
+        <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">${timeStr}</span>
       </div>
-      <div class="msg-subject">${escapeHtml(msg.subject)}</div>
-      <div class="msg-intro">${escapeHtml(msg.intro)}</div>
+      <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: var(--primary);">${escapeHtml(msg.subject)}</div>
+      <div style="font-size: 0.82rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(msg.intro)}</div>
     `;
+
+    card.addEventListener("mouseenter", () => {
+      card.style.borderColor = "var(--primary)";
+      card.style.transform = "translateY(-1px)";
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.borderColor = "var(--border-color)";
+      card.style.transform = "none";
+    });
+
     card.addEventListener("click", () => openReadMessageModal(msg));
     container.appendChild(card);
   });
@@ -436,7 +327,7 @@ function parseUrls(text) {
   let safe = escapeHtml(text);
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return safe.replace(urlRegex, (url) => {
-    return `<div class="url-box"><a href="${url}" target="_blank">${url}</a><button class="btn-copy-url" data-url="${url}">Copy Link</button></div>`;
+    return `<div class="url-box" style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; word-break: break-all;"><a href="${url}" target="_blank" style="color: var(--primary); font-weight: 700;">${url}</a><button class="btn-copy-url btn-action" data-url="${url}" style="padding: 4px 10px; font-size: 0.72rem;">Salin Link</button></div>`;
   }).replace(/\n/g, "<br>");
 }
 
@@ -451,31 +342,15 @@ export async function openReadMessageModal(msg) {
 
   senderEl.textContent = msg.from;
   subjectEl.textContent = msg.subject;
-  timeEl.textContent = new Date(msg.createdAt).toLocaleString();
-  bodyEl.innerHTML = '<div style="text-align:center; padding:20px;"><span class="spinner"></span> Loading content...</div>';
+  timeEl.textContent = new Date(msg.createdAt).toLocaleString("id-ID");
+  bodyEl.innerHTML = '<div style="text-align:center; padding:20px;"><span class="spinner"></span> Memuat isi email...</div>';
 
   modal.classList.remove("hidden");
 
   try {
     let fullText = msg.intro || "";
-    if (currentServer === "server2") {
-      const safeEmail = currentEmail.replace(/@/g, "_").replace(/\./g, "_");
-      const paramsEnc = encPayload({});
-      const detailUrl = `https://mail-server.1timetech.com/api/email/${safeEmail}/messages/${msg.id}?params=${paramsEnc}`;
-      const detailRes = await fetch(detailUrl, {
-        headers: {
-          "User-Agent": "okhttp/4.9.2",
-          Accept: "application/json, text/plain, */*",
-          "x-app-key": "f07bed4503msh719c2010df3389fp1d6048jsn411a41a84a3c",
-        },
-      });
-      if (detailRes.ok) {
-        const json = await detailRes.json();
-        const detail = decPayload(json.data);
-        fullText = detail.text || detail.body || detail.html || fullText;
-      }
-    } else if (currentToken) {
-      const res = await fetch(`${SERVER1_API}/messages/${msg.id}`, {
+    if (currentToken) {
+      const res = await fetch(`${MAIL_API}/messages/${msg.id}`, {
         headers: { Authorization: `Bearer ${currentToken}` },
       });
       if (res.ok) {
@@ -490,55 +365,19 @@ export async function openReadMessageModal(msg) {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         const link = btn.getAttribute("data-url");
-        navigator.clipboard.writeText(link).then(() => showToast("Link copied!"));
+        navigator.clipboard.writeText(link).then(() => showToast("Link disalin!"));
       });
     });
   } catch (err) {
-    bodyEl.textContent = msg.intro || "Error loading message text.";
+    bodyEl.textContent = msg.intro || "Gagal memuat pesan.";
   }
 }
 
 export function initTempMailEvents() {
-  // Server Tab Switcher
-  const tab1 = document.getElementById("tabServer1");
-  const tab2 = document.getElementById("tabServer2");
-  const panel1 = document.getElementById("panelServer1");
-  const panel2 = document.getElementById("panelServer2");
-
-  if (tab1 && tab2) {
-    tab1.addEventListener("click", () => {
-      tab1.classList.add("active");
-      tab2.classList.remove("active");
-      if (panel1) panel1.classList.remove("hidden");
-      if (panel2) panel2.classList.add("hidden");
-      currentServer = "server1";
-      localStorage.setItem("rysav_temp_server", "server1");
-    });
-
-    tab2.addEventListener("click", () => {
-      tab2.classList.add("active");
-      tab1.classList.remove("active");
-      if (panel2) panel2.classList.remove("hidden");
-      if (panel1) panel1.classList.add("hidden");
-      currentServer = "server2";
-      localStorage.setItem("rysav_temp_server", "server2");
-    });
-  }
-
-  // Create Server 1 Btn
-  const btnCreate1 = document.getElementById("btnCreateServer1Email");
-  if (btnCreate1) {
-    btnCreate1.addEventListener("click", () => createServer1Email());
-  }
-
-  // Create Server 2 Btn
-  const btnCreate2 = document.getElementById("btnCreateServer2Email");
-  if (btnCreate2) {
-    btnCreate2.addEventListener("click", () => {
-      const uname = document.getElementById("tempCustomNameInput")?.value;
-      const dom = document.getElementById("tempDomainSelectBox")?.value;
-      createServer2CustomEmail(uname, dom);
-    });
+  // Generate Email Btn
+  const btnCreate = document.getElementById("btnCreateEmail");
+  if (btnCreate) {
+    btnCreate.addEventListener("click", () => createNewEmail());
   }
 
   // Manual Login Btn
@@ -555,7 +394,7 @@ export function initTempMailEvents() {
   if (btnCopy) {
     btnCopy.addEventListener("click", () => {
       if (currentEmail) {
-        navigator.clipboard.writeText(currentEmail).then(() => showToast("Email copied!"));
+        navigator.clipboard.writeText(currentEmail).then(() => showToast("Alamat email disalin!"));
       }
     });
   }
@@ -574,6 +413,15 @@ export function initTempMailEvents() {
   const btnRefHist = document.getElementById("btnRefreshHistoryList");
   if (btnRefHist) {
     btnRefHist.addEventListener("click", () => renderSavedAccountsBar());
+  }
+
+  // Refresh Inbox Sync Btn
+  const btnSyncInbox = document.getElementById("btnSyncInbox");
+  if (btnSyncInbox) {
+    btnSyncInbox.addEventListener("click", () => {
+      fetchInboxMessages();
+      showToast("Inbox diperbarui!");
+    });
   }
 
   checkTempMailState();
