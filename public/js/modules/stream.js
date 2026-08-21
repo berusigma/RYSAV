@@ -251,7 +251,7 @@ function renderMovieDetail(d) {
   content.innerHTML = `
     <!-- Video Player Frame -->
     <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; margin-bottom: 16px;">
-      <iframe id="streamIframe" src="${defaultStreamUrl}" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      <iframe id="streamIframe" src="${defaultStreamUrl}" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"></iframe>
     </div>
 
     <!-- Server & Episode Selectors -->
@@ -359,6 +359,8 @@ export function initStreamEvents() {
   const btnSearch = document.getElementById("btnStreamSearch");
   const inputSearch = document.getElementById("streamSearchInput");
   const btnCloseModal = document.getElementById("btnCloseStreamModal");
+  const btnMiniPlayer = document.getElementById("btnMiniPlayer");
+  const modal = document.getElementById("streamPlayerModal");
 
   if (btnSearch && inputSearch) {
     btnSearch.addEventListener("click", () => {
@@ -369,12 +371,25 @@ export function initStreamEvents() {
     });
   }
 
+  if (btnMiniPlayer && modal) {
+    btnMiniPlayer.addEventListener("click", () => {
+      modal.classList.toggle("mini-player-mode");
+      const isMini = modal.classList.contains("mini-player-mode");
+      btnMiniPlayer.innerHTML = isMini
+        ? `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg> Full`
+        : `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="12" y="12" width="6" height="6"></rect></svg> Mini`;
+      showToast(isMini ? "Mini Player Aktif" : "Full Screen Player");
+    });
+  }
+
   if (btnCloseModal) {
     btnCloseModal.addEventListener("click", () => {
-      const modal = document.getElementById("streamPlayerModal");
       const iframe = document.getElementById("streamIframe");
       if (iframe) iframe.src = "";
-      if (modal) modal.classList.add("hidden");
+      if (modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("mini-player-mode");
+      }
     });
   }
 
