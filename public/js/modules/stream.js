@@ -358,6 +358,7 @@ function escapeHtml(str) {
 export function initStreamEvents() {
   const btnSearch = document.getElementById("btnStreamSearch");
   const inputSearch = document.getElementById("streamSearchInput");
+  const btnCloseModal = document.getElementById("btnCloseStreamModal");
 
   if (btnSearch && inputSearch) {
     btnSearch.addEventListener("click", () => {
@@ -365,6 +366,15 @@ export function initStreamEvents() {
     });
     inputSearch.addEventListener("keypress", (e) => {
       if (e.key === "Enter") searchMovies(inputSearch.value);
+    });
+  }
+
+  if (btnCloseModal) {
+    btnCloseModal.addEventListener("click", () => {
+      const modal = document.getElementById("streamPlayerModal");
+      const iframe = document.getElementById("streamIframe");
+      if (iframe) iframe.src = "";
+      if (modal) modal.classList.add("hidden");
     });
   }
 

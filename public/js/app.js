@@ -278,6 +278,8 @@ document.addEventListener("click", (e) => {
   const backToToolsBtn = e.target.closest(".back-to-tools-btn");
   if (backToToolsBtn) {
     document.querySelectorAll(".tools-sub-page").forEach((p) => p.classList.add("hidden"));
+    document.getElementById("toolsMainMenu")?.classList.remove("hidden");
+    return;
   }
 });
 
