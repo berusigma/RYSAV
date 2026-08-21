@@ -478,103 +478,190 @@
           </div>
         </div>
 
-        <!-- Temp Mail Page -->
-        <div id="tempmailPage" class="page-content hidden">
-          <div class="page-header">
-            <h2>Temp Mail</h2>
-            <p>Temporary Disposable Email System</p>
-          </div>
-
-          <div class="tempmail-server-card media-card" style="margin-bottom: 16px; padding: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-              <span style="font-weight: 700; font-size: 0.9rem;">Server Email:</span>
-              <select id="tempServerSelect" class="custom-select-input" style="padding: 6px 12px; border-radius: 10px; background: var(--surface); color: var(--text-main); border: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 600;">
-                <option value="server1">Server 1 (Mail.tm - Fast)</option>
-                <option value="server2">Server 2 (1TimeTech - Custom Username)</option>
-              </select>
+        <!-- Tools Page -->
+        <div id="toolsPage" class="page-content hidden">
+          <!-- Tools Main Menu -->
+          <div id="toolsMainMenu">
+            <div class="page-header">
+              <h2>Tools & Utilities</h2>
+              <p>Fitur & Alat Bantu Tambahan RYSAV</p>
             </div>
-          </div>
 
-          <div class="stats-grid-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-            <div class="media-card" style="padding: 14px; display: flex; align-items: center; gap: 12px;">
-              <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
-                <div id="tempPulseDot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
-              </div>
-              <div>
-                <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase;">Status</div>
-                <div id="tempStatActive" style="font-size: 1.1rem; font-weight: 700;">Standby</div>
-              </div>
-            </div>
-            <div class="media-card" style="padding: 14px; display: flex; align-items: center; gap: 12px;">
-              <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem;">
-                ✉️
-              </div>
-              <div>
-                <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase;">Inbox</div>
-                <div id="tempStatMsg" style="font-size: 1.1rem; font-weight: 700;">0</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- VIEW: Kosong (Empty View) -->
-          <div id="tempMailEmptyView" class="media-card" style="padding: 24px; text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 12px;">📨</div>
-            <h3 style="margin-bottom: 8px; font-size: 1.3rem;">Disposable Temporary Email</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">Protect your primary email from spam & tracking. Create instant temporary addresses or custom aliases.</p>
-
-            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 0 auto;">
-              <button id="btnTempGenerate" class="primary-btn" style="width: 100%;">
-                Generate Random Email
-              </button>
-
-              <div id="tempCustomSection" style="margin-top: 10px; text-align: left; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-                <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">Create Custom Username:</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                  <input type="text" id="tempCustomUsernameInput" class="custom-text-input" placeholder="myusername" style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);" />
-                  <select id="tempDomainSelect" class="custom-select-input" style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 600;">
-                    <option value="@gmail10p.com">@gmail10p.com</option>
-                    <option value="@oletters.com">@oletters.com</option>
-                    <option value="@oemails.com">@oemails.com</option>
-                    <option value="@oegmail.com">@oegmail.com</option>
-                    <option value="@suiemail.com">@suiemail.com</option>
-                    <option value="@voewo.com">@voewo.com</option>
-                    <option value="@yanemail.com">@yanemail.com</option>
-                  </select>
+            <div class="tools-menu-grid" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- Tool 1: Temp Mail -->
+              <div class="tool-card media-card" data-target="toolsTempMail" style="padding: 18px; cursor: pointer; display: flex; align-items: center; gap: 16px;">
+                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; position: relative;">
+                  📧
+                  <span id="toolsMailBadge" class="nav-badge hidden" style="top: -6px; right: -6px;">0</span>
                 </div>
-                <button id="btnTempCustomCreate" class="secondary-btn" style="width: 100%;">Create Custom Email</button>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1.05rem; font-weight: 700;">Temp Mail (Email Sementara)</h3>
+                    <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Buat email sementara instan / custom username. Dilengkapi notifikasi real-time & multi-server.</p>
+                </div>
               </div>
 
-              <div style="margin-top: 10px; text-align: left; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-                <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">Or Login to Existing Email:</label>
+              <!-- Tool 2: NIK Parser -->
+              <div class="tool-card media-card" data-target="toolsNikParser" style="padding: 18px; cursor: pointer; display: flex; align-items: center; gap: 16px;">
+                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                  🆔
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1.05rem; font-weight: 700;">NIK KTP Parser</h3>
+                    <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Pemeriksaan 16-digit NIK KTP Indonesia, lokasi provinsi/kabupaten/kecamatan, weton Jawa, dan zodiak.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tool Sub-Page: Temp Mail -->
+          <div id="toolsTempMail" class="tools-sub-page hidden">
+            <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+              <button class="back-to-tools-btn secondary-btn btn-sm" style="padding: 8px 14px; border-radius: 12px;">← Back to Tools</button>
+              <h2 style="font-size: 1.2rem; font-weight: 700;">Temp Mail</h2>
+            </div>
+
+            <!-- Active Email Banner (Always Clear) -->
+            <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                <div>
+                  <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Active Email Address</span>
+                  <div id="tempActiveEmailDisplay" style="font-size: 1.1rem; font-weight: 800; font-family: 'Space Mono', monospace; word-break: break-all; margin-top: 2px;">
+                    No Active Email
+                  </div>
+                </div>
+                <span id="tempActiveServerTag" class="stat-pill" style="font-size: 0.72rem; padding: 3px 8px;">Server 1</span>
+              </div>
+
+              <!-- Quick Email Actions -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button id="btnCopyActiveEmail" class="secondary-btn btn-sm" style="flex: 1;">📋 Copy Email</button>
+                <button id="btnDeleteActiveEmail" class="secondary-btn btn-sm" style="color: #ef4444; border-color: #ef4444;">🗑️ Delete Email</button>
+              </div>
+            </div>
+
+            <!-- Account Switcher & History -->
+            <div class="media-card" style="padding: 14px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">Saved Email Accounts</span>
+                <button id="btnRefreshHistoryList" class="secondary-btn btn-sm" style="font-size: 0.75rem; padding: 2px 8px;">Refresh</button>
+              </div>
+              <div id="tempAccountsBar" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+                <!-- Account Badges injected here -->
+              </div>
+            </div>
+
+            <!-- Separate Email Creation Tabs (Server 1 vs Server 2) -->
+            <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
+              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Create New Email</h3>
+              
+              <!-- Tab Switcher -->
+              <div style="display: flex; gap: 6px; background: var(--surface); padding: 4px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-color);">
+                <button id="tabServer1" class="temp-server-tab active" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+                  Server 1 (Fast Auto)
+                </button>
+                <button id="tabServer2" class="temp-server-tab" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+                  Server 2 (Custom Username)
+                </button>
+              </div>
+
+              <!-- Panel 1: Server 1 (Mail.tm) -->
+              <div id="panelServer1" class="temp-server-panel">
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">Generates a high-speed disposable email address on Server 1 (Mail.tm).</p>
+                <button id="btnCreateServer1Email" class="primary-btn" style="width: 100%;">
+                  ⚡ Generate Server 1 Email
+                </button>
+              </div>
+
+              <!-- Panel 2: Server 2 (1TimeTech Custom) -->
+              <div id="panelServer2" class="temp-server-panel hidden">
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px;">Create a custom email alias with your preferred username on Server 2.</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+                  <div>
+                    <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Custom Username:</label>
+                    <input type="text" id="tempCustomNameInput" class="custom-text-input" placeholder="e.g. febrywesker" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;" />
+                  </div>
+                  <div>
+                    <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Select Domain:</label>
+                    <select id="tempDomainSelectBox" class="custom-select-input" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;">
+                      <option value="@gmail10p.com">@gmail10p.com</option>
+                      <option value="@oletters.com">@oletters.com</option>
+                      <option value="@oemails.com">@oemails.com</option>
+                      <option value="@oegmail.com">@oegmail.com</option>
+                      <option value="@suiemail.com">@suiemail.com</option>
+                      <option value="@voewo.com">@voewo.com</option>
+                      <option value="@yanemail.com">@yanemail.com</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="btnCreateServer2Email" class="primary-btn" style="width: 100%;">
+                  ✨ Create Custom Server 2 Email
+                </button>
+              </div>
+
+              <!-- Manual Login Section -->
+              <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-color);">
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 6px;">Or Login to Existing Address:</span>
                 <div style="display: flex; gap: 8px;">
-                  <input type="email" id="tempManualEmailInput" class="custom-text-input" placeholder="email@...com" style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);" />
-                  <button id="btnTempManualLogin" class="secondary-btn">Login</button>
+                  <input type="email" id="tempManualLoginInput" class="custom-text-input" placeholder="email@domain.com" style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);" />
+                  <button id="btnManualLogin" class="secondary-btn">Login</button>
                 </div>
               </div>
             </div>
+
+            <!-- Inbox Section -->
+            <div class="media-card" style="padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div id="tempPulseDot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
+                  <h3 style="font-size: 1rem; font-weight: 700;">Inbox Messages (<span id="tempMsgCounter">0</span>)</h3>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Auto-sync 15s</span>
+              </div>
+              <div id="tempInboxList" class="temp-inbox-list" style="max-height: 380px; overflow-y: auto;"></div>
+            </div>
           </div>
 
-          <!-- VIEW: Aktif (Active View) -->
-          <div id="tempMailActiveView" class="media-card hidden" style="padding: 20px;">
-            <div style="background: var(--surface); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 14px; margin-bottom: 20px;">
-              <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Your Email Address</span>
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" id="tempDisplayEmailInput" class="custom-text-input" readonly value="loading..." style="flex: 1; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main);" />
-                <button id="btnTempCopyEmail" class="secondary-btn" title="Copy Email">Copy</button>
+          <!-- Tool Sub-Page: NIK Parser -->
+          <div id="toolsNikParser" class="tools-sub-page hidden">
+            <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+              <button class="back-to-tools-btn secondary-btn btn-sm" style="padding: 8px 14px; border-radius: 12px;">← Back to Tools</button>
+              <h2 style="font-size: 1.2rem; font-weight: 700;">NIK KTP Parser</h2>
+            </div>
+
+            <div class="media-card" style="padding: 20px; margin-bottom: 16px;">
+              <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 8px;">
+                Masukkan 16 Digit NIK KTP:
+              </label>
+              <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input
+                  type="text"
+                  id="nikInput"
+                  class="custom-text-input"
+                  placeholder="Contoh: 3201010101000001"
+                  maxlength="16"
+                  style="flex: 1; font-weight: 700; font-family: 'Space Mono', monospace; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);"
+                />
+                <button id="btnNikPaste" class="secondary-btn" title="Paste NIK">Paste</button>
               </div>
+              <button id="btnNikParse" class="primary-btn" style="width: 100%;">
+                Parse & Analisis NIK
+              </button>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
-              <h3 style="font-size: 1.1rem; font-weight: 700;">Inbox Messages</h3>
-              <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Auto-sync 15s</span>
+            <!-- Loading Spinner -->
+            <div id="nikLoadingSpinner" class="media-card hidden" style="padding: 24px; text-align: center;">
+              <span class="spinner"></span>
+              <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem;">Memproses data NIK & wilayah...</p>
             </div>
 
-            <div id="tempInboxList" class="temp-inbox-list" style="margin-bottom: 16px; max-height: 380px; overflow-y: auto;"></div>
-
-            <div style="display: flex; gap: 10px;">
-              <button id="btnTempHistory" class="secondary-btn" style="flex: 1;">Email History</button>
-              <button id="btnTempChangeEmail" class="primary-btn" style="flex: 1;">Generate New</button>
-            </div>
+            <!-- Result Container -->
+            <div id="nikResultCard" class="media-card hidden"></div>
           </div>
         </div>
 
@@ -2286,6 +2373,7 @@
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
           </svg>
           <span data-i18n="nav-home">Home</span>
+        </a>
         <a href="#" class="nav-item" data-page="history">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path
@@ -2294,22 +2382,23 @@
           </svg>
           <span data-i18n="nav-history">History</span>
         </a>
-        <a href="#" class="nav-item" data-page="tempmail">
+        <a href="#" class="nav-item" data-page="tools">
           <div class="nav-icon-wrapper" style="position: relative; display: inline-flex;">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.6C.4 7 1 10 3 12c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1.1 0-1.5z"/>
             </svg>
             <span id="tempMailBadge" class="nav-badge hidden">0</span>
           </div>
-          <span>Mail</span>
+          <span>Tools</span>
         </a>
         <a href="#" class="nav-item" data-page="settings">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path
-              d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.70-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+              d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.70-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"
             />
           </svg>
           <span data-i18n="nav-settings">Settings</span>
+        </a>
       </nav>
       <!-- Custom Info Modal -->
       <div id="infoOverlay" class="modal-overlay hidden">

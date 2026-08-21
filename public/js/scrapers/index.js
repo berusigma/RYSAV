@@ -13,3 +13,4 @@ export * from "./pinterest.js";
 export * from "./applemusic.js";
 export * from "./facebook.js";
 export * from "./bandcamp.js";
+export * from "./vidssave.js";

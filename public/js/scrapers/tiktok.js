@@ -1,6 +1,7 @@
 import { CHROME_UA } from "../utils/index.js";
 import { getCleanUrl } from "../utils/urlUtils.js";
 import { scraperFetch, createScraperResult } from "./httpHelper.js";
+import { scrapeVidsSave } from "./vidssave.js";
 
 export let _ttSource = "tikwm";
 export function setTikTokSource(src) {
@@ -8,7 +9,7 @@ export function setTikTokSource(src) {
 }
 
 /**
- * 100% Reliable TikTok Scraper using TikWM API (POST & GET) with TiklyDown Fallback
+ * 100% Reliable TikTok Scraper using TikWM API (POST & GET), TiklyDown, and VidsSave Fallbacks
  */
 export async function scrapeTikTok(url) {
   let currentStatus = null;
@@ -68,7 +69,7 @@ export async function scrapeTikTok(url) {
       }
     }
 
-    // Method 3: TiklyDown Fallback if TikWM is rate limited / IP blocked
+    // Method 3: TiklyDown Fallback
     if (!resData || resData.code !== 0 || !resData.data) {
       try {
         const tiklyRes = await scraperFetch(
@@ -108,7 +109,19 @@ export async function scrapeTikTok(url) {
           };
         }
       } catch (e) {
-        console.warn("TiklyDown fallback failed...", e);
+        console.warn("TiklyDown fallback failed, trying VidsSave...", e);
+      }
+    }
+
+    // Method 4: VidsSave API All-in-One Fallback
+    if (!resData || resData.code !== 0 || !resData.data) {
+      try {
+        const vidsResult = await scrapeVidsSave(cleanUrl);
+        if (vidsResult && vidsResult.success) {
+          return vidsResult;
+        }
+      } catch (e) {
+        console.warn("VidsSave fallback failed...", e);
       }
     }
 

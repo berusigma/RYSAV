@@ -2920,3 +2920,21 @@ input[type="text"]:focus {
   flex-shrink: 0;
 }
 
+.temp-server-tab {
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.temp-server-tab.active {
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.active-account-pill {
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--primary) !important;
+}
+

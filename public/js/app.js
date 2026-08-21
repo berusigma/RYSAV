@@ -50,6 +50,7 @@ import {
 } from "./modules/core.js";
 
 import { initTempMailEvents, fetchInboxMessages } from "./modules/tempmail.js";
+import { initNikParserEvents } from "./modules/nikparser.js";
 
 // imports for side effects (settings UI, history, modals, update, intents, download)
 import "./modules/settings.js";
@@ -60,6 +61,7 @@ import "./modules/intents.js";
 import "./modules/download.js";
 
 initTempMailEvents();
+initNikParserEvents();
 
 // Batch Mode Toggle
 if (batchToggleBtn) {
@@ -162,7 +164,7 @@ initAuthListeners(currentLang);
 setUIState({ currentLang, isEditingHistory });
 renderHistory(onHistoryItemClick, onHistoryDeleteClick);
 
-const pages = ["home", "history", "tempmail", "settings"];
+const pages = ["home", "history", "tools", "settings"];
 
 async function switchPage(pageId) {
   const isNative = window.Capacitor?.isNativePlatform?.();
@@ -229,13 +231,15 @@ async function switchPage(pageId) {
     renderHistory(onHistoryItemClick, onHistoryDeleteClick);
   }
 
-  // Refresh inbox if entering tempmail page
-  if (pageId === "tempmail") {
-    fetchInboxMessages();
+  // Reset tools to main menu when entering tools page
+  if (pageId === "tools") {
+    document.querySelectorAll(".tools-sub-page").forEach((p) => p.classList.add("hidden"));
+    const toolsMainMenu = document.getElementById("toolsMainMenu");
+    if (toolsMainMenu) toolsMainMenu.classList.remove("hidden");
   }
 }
 
-// Global Event Delegation for Navigation Items
+// Global Event Delegation for Navigation Items and Tools Subpages
 document.addEventListener("click", (e) => {
   const navItem = e.target.closest(".nav-item");
   if (navItem) {
@@ -244,6 +248,31 @@ document.addEventListener("click", (e) => {
     if (pageId) {
       switchPage(pageId);
     }
+    return;
+  }
+
+  // Handle Tool Card Click inside Tools Page
+  const toolCard = e.target.closest(".tool-card");
+  if (toolCard) {
+    const targetSubPageId = toolCard.getAttribute("data-target");
+    if (targetSubPageId) {
+      document.getElementById("toolsMainMenu")?.classList.add("hidden");
+      document.querySelectorAll(".tools-sub-page").forEach((p) => p.classList.add("hidden"));
+      const subPage = document.getElementById(targetSubPageId);
+      if (subPage) {
+        subPage.classList.remove("hidden");
+        if (targetSubPageId === "toolsTempMail") {
+          fetchInboxMessages();
+        }
+      }
+    }
+    return;
+  }
+
+  // Handle Back to Tools Button Click
+  const backToToolsBtn = e.target.closest(".back-to-tools-btn");
+  if (backToToolsBtn) {
+    document.querySelectorAll(".tools-sub-page").forEach((p) => p.classList.add("hidden"));
   }
 });
 
