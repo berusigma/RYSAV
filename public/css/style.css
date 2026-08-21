@@ -3134,3 +3134,18 @@ svg.icon {
   border-color: var(--primary);
 }
 
+/* Player Modal Scroll Fix */
+#streamPlayerModal .modal-content {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#streamPlayerModal .modal-body {
+  overflow-y: auto;
+  max-height: calc(85vh - 60px);
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 24px;
+}
+

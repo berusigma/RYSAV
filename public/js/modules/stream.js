@@ -251,7 +251,7 @@ function renderMovieDetail(d) {
   content.innerHTML = `
     <!-- Video Player Frame -->
     <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; margin-bottom: 16px;">
-      <iframe id="streamIframe" src="${defaultStreamUrl}" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"></iframe>
+      <iframe id="streamIframe" src="${defaultStreamUrl}" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
     </div>
 
     <!-- Server & Episode Selectors -->
