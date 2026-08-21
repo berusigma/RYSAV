@@ -132,26 +132,26 @@ export async function scrapeTikTok(url) {
     const metaData = metaRes.success ? metaRes.result : {};
     const snapData = snapRes.success ? snapRes.results : {};
 
-    // 1. Add Snaptik downloads
+    // 1. Add primary downloads (clean labels)
     if (snapData.hdVideo) {
-      downloads.push({ type: "VIDEO HD (Snaptik Server)", url: snapData.hdVideo });
+      downloads.push({ type: "VIDEO HD (No Watermark)", url: snapData.hdVideo });
     }
     if (snapData.video && snapData.video !== snapData.hdVideo) {
-      downloads.push({ type: "VIDEO Regular (Snaptik)", url: snapData.video });
+      downloads.push({ type: "VIDEO Regular (No Watermark)", url: snapData.video });
     }
     if (snapData.audio) {
-      downloads.push({ type: "MP3 Audio (Snaptik)", url: snapData.audio });
+      downloads.push({ type: "MP3 Sound Track", url: snapData.audio });
     }
 
-    // 2. Add TikWM downloads if Snaptik missed any
+    // 2. Add secondary downloads if not already added
     if (metaData.hdVideo && !downloads.some((d) => d.url === metaData.hdVideo)) {
-      downloads.push({ type: "VIDEO HD (TikWM)", url: metaData.hdVideo });
+      downloads.push({ type: "VIDEO Ultra HD", url: metaData.hdVideo });
     }
     if (metaData.video && !downloads.some((d) => d.url === metaData.video)) {
-      downloads.push({ type: "VIDEO Regular", url: metaData.video });
+      downloads.push({ type: "VIDEO Standard", url: metaData.video });
     }
     if (metaData.audio && !downloads.some((d) => d.url === metaData.audio)) {
-      downloads.push({ type: "MP3 Sound Track", url: metaData.audio });
+      downloads.push({ type: "MP3 Audio Track", url: metaData.audio });
     }
     if (metaData.images && Array.isArray(metaData.images)) {
       metaData.images.forEach((img, idx) => {

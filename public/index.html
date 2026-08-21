@@ -490,8 +490,11 @@
             <div class="tools-menu-grid" style="display: flex; flex-direction: column; gap: 14px;">
               <!-- Tool 1: Temp Mail -->
               <div class="tool-card media-card" data-target="toolsTempMail" style="padding: 18px; cursor: pointer; display: flex; align-items: center; gap: 16px;">
-                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; position: relative;">
-                  📧
+                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--bg-color); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
                   <span id="toolsMailBadge" class="nav-badge hidden" style="top: -6px; right: -6px;">0</span>
                 </div>
                 <div style="flex: 1;">
@@ -505,8 +508,10 @@
 
               <!-- Tool 2: NIK Parser -->
               <div class="tool-card media-card" data-target="toolsNikParser" style="padding: 18px; cursor: pointer; display: flex; align-items: center; gap: 16px;">
-                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
-                  🆔
+                <div class="tool-icon-box" style="width: 48px; height: 48px; border-radius: 14px; background: var(--bg-color); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="11" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="15" y2="16"/><circle cx="15" cy="8" r="1.5"/>
+                  </svg>
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -522,73 +527,80 @@
           <!-- Tool Sub-Page: Temp Mail -->
           <div id="toolsTempMail" class="tools-sub-page hidden">
             <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-              <button class="back-to-tools-btn secondary-btn btn-sm" style="padding: 8px 14px; border-radius: 12px;">← Back to Tools</button>
-              <h2 style="font-size: 1.2rem; font-weight: 700;">Temp Mail</h2>
+              <button class="back-to-tools-btn btn-action" style="padding: 8px 14px;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Tools
+              </button>
+              <h2 style="font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">RAY.MAIL</h2>
             </div>
 
-            <!-- Active Email Banner (Always Clear) -->
+            <!-- Active Email Banner -->
             <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                 <div>
-                  <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Active Email Address</span>
-                  <div id="tempActiveEmailDisplay" style="font-size: 1.1rem; font-weight: 800; font-family: 'Space Mono', monospace; word-break: break-all; margin-top: 2px;">
+                  <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px;">Active Address</span>
+                  <div id="tempActiveEmailDisplay" style="font-size: 1.15rem; font-weight: 700; font-family: 'Space Mono', monospace; word-break: break-all; margin-top: 4px; color: var(--primary);">
                     No Active Email
                   </div>
                 </div>
-                <span id="tempActiveServerTag" class="stat-pill" style="font-size: 0.72rem; padding: 3px 8px;">Server 1</span>
+                <span id="tempActiveServerTag" class="stat-pill">SRV 1</span>
               </div>
 
-              <!-- Quick Email Actions -->
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button id="btnCopyActiveEmail" class="secondary-btn btn-sm" style="flex: 1;">📋 Copy Email</button>
-                <button id="btnDeleteActiveEmail" class="secondary-btn btn-sm" style="color: #ef4444; border-color: #ef4444;">🗑️ Delete Email</button>
+              <!-- Quick Actions -->
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="btnCopyActiveEmail" class="btn-action" style="flex: 1;">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Copy
+                </button>
+                <button id="btnDeleteActiveEmail" class="btn-action danger" style="flex: 1;">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Delete
+                </button>
               </div>
             </div>
 
-            <!-- Account Switcher & History -->
-            <div class="media-card" style="padding: 14px; margin-bottom: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">Saved Email Accounts</span>
-                <button id="btnRefreshHistoryList" class="secondary-btn btn-sm" style="font-size: 0.75rem; padding: 2px 8px;">Refresh</button>
+            <!-- Account Switcher -->
+            <div class="media-card" style="padding: 16px 20px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Saved Accounts</span>
+                <button id="btnRefreshHistoryList" class="btn-action" style="padding: 4px 8px; font-size: 0.7rem;">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
               </div>
               <div id="tempAccountsBar" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
-                <!-- Account Badges injected here -->
+                <!-- Injected dynamically -->
               </div>
             </div>
 
-            <!-- Separate Email Creation Tabs (Server 1 vs Server 2) -->
-            <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
-              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Create New Email</h3>
+            <!-- Create New Email Section -->
+            <div class="media-card" style="margin-bottom: 16px;">
+              <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Create New Email</h3>
               
               <!-- Tab Switcher -->
-              <div style="display: flex; gap: 6px; background: var(--surface); padding: 4px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-color);">
-                <button id="tabServer1" class="temp-server-tab active" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
-                  Server 1 (Fast Auto)
-                </button>
-                <button id="tabServer2" class="temp-server-tab" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
-                  Server 2 (Custom Username)
-                </button>
+              <div style="display: flex; gap: 6px; background: var(--bg-color); padding: 4px; border-radius: 14px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+                <button id="tabServer1" class="temp-server-tab active">Fast Auto</button>
+                <button id="tabServer2" class="temp-server-tab">Custom</button>
               </div>
 
-              <!-- Panel 1: Server 1 (Mail.tm) -->
+              <!-- Panel 1: Server 1 -->
               <div id="panelServer1" class="temp-server-panel">
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">Generates a high-speed disposable email address on Server 1 (Mail.tm).</p>
-                <button id="btnCreateServer1Email" class="primary-btn" style="width: 100%;">
-                  ⚡ Generate Server 1 Email
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; font-weight: 500;">Generates a high-speed disposable email address on Server 1 (Mail.tm).</p>
+                <button id="btnCreateServer1Email" class="btn-primary-main">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  Generate Email
                 </button>
               </div>
 
-              <!-- Panel 2: Server 2 (1TimeTech Custom) -->
+              <!-- Panel 2: Server 2 -->
               <div id="panelServer2" class="temp-server-panel hidden">
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px;">Create a custom email alias with your preferred username on Server 2.</p>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
                   <div>
-                    <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Custom Username:</label>
-                    <input type="text" id="tempCustomNameInput" class="custom-text-input" placeholder="e.g. febrywesker" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;" />
+                    <label style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 0.5px; color: var(--text-secondary);">Custom Username</label>
+                    <input type="text" id="tempCustomNameInput" class="custom-text-input" placeholder="e.g. anon123" />
                   </div>
                   <div>
-                    <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Select Domain:</label>
-                    <select id="tempDomainSelectBox" class="custom-select-input" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;">
+                    <label style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 0.5px; color: var(--text-secondary);">Select Domain</label>
+                    <select id="tempDomainSelectBox" class="custom-select-input">
                       <option value="@gmail10p.com">@gmail10p.com</option>
                       <option value="@oletters.com">@oletters.com</option>
                       <option value="@oemails.com">@oemails.com</option>
@@ -599,29 +611,32 @@
                     </select>
                   </div>
                 </div>
-                <button id="btnCreateServer2Email" class="primary-btn" style="width: 100%;">
-                  ✨ Create Custom Server 2 Email
+                <button id="btnCreateServer2Email" class="btn-primary-main">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  Create Custom
                 </button>
               </div>
 
-              <!-- Manual Login Section -->
-              <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-color);">
-                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 6px;">Or Login to Existing Address:</span>
-                <div style="display: flex; gap: 8px;">
-                  <input type="email" id="tempManualLoginInput" class="custom-text-input" placeholder="email@domain.com" style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);" />
-                  <button id="btnManualLogin" class="secondary-btn">Login</button>
+              <!-- Manual Login -->
+              <div style="margin-top: 24px; padding-top: 20px; border-top: 1px dashed var(--border-color);">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 12px; letter-spacing: 0.5px;">Manual Login</span>
+                <div style="display: flex; gap: 10px;">
+                  <input type="email" id="tempManualLoginInput" class="custom-text-input" placeholder="email@domain.com" style="flex: 1;" />
+                  <button id="btnManualLogin" class="btn-action">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                  </button>
                 </div>
               </div>
             </div>
 
             <!-- Inbox Section -->
-            <div class="media-card" style="padding: 18px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <div id="tempPulseDot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
-                  <h3 style="font-size: 1rem; font-weight: 700;">Inbox Messages (<span id="tempMsgCounter">0</span>)</h3>
+            <div class="media-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div id="tempPulseDot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--text-main);"></div>
+                  <h3 style="font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Inbox (<span id="tempMsgCounter">0</span>)</h3>
                 </div>
-                <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Auto-sync 15s</span>
+                <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; letter-spacing: 0.5px;">SYNC 15s</span>
               </div>
               <div id="tempInboxList" class="temp-inbox-list" style="max-height: 380px; overflow-y: auto;"></div>
             </div>
