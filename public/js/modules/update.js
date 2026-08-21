@@ -152,7 +152,7 @@ shareAppBtn?.addEventListener("click", async () => {
     await Share.share({
       title: "RYSAV App",
       text: lang["share-msg"],
-      url: "https://github.com/coflyn/RYSAV",
+      url: REPO_URL,
       dialogTitle: "Share RYSAV",
     });
   } else {
@@ -161,7 +161,7 @@ shareAppBtn?.addEventListener("click", async () => {
       navigator.share({
         title: "RYSAV App",
         text: lang["share-msg"],
-        url: "https://github.com/coflyn/RYSAV",
+        url: REPO_URL,
       });
     } else {
       showToast("Sharing not supported on this browser.");

@@ -6,9 +6,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-v4.2.2-brown?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/github/downloads/coflyn/RYSAV/total?style=flat-square&color=blue" alt="Downloads">
-  <img src="https://img.shields.io/github/stars/coflyn/RYSAV?style=flat-square&color=gold" alt="Stars">
-  <img src="https://img.shields.io/github/repo-size/coflyn/RYSAV?style=flat-square&color=purple" alt="Repo Size">
+  <img src="https://img.shields.io/github/downloads/berusigma/RYSAV/total?style=flat-square&color=blue" alt="Downloads">
+  <img src="https://img.shields.io/github/stars/berusigma/RYSAV?style=flat-square&color=gold" alt="Stars">
+  <img src="https://img.shields.io/github/repo-size/berusigma/RYSAV?style=flat-square&color=purple" alt="Repo Size">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
 </p>
@@ -333,9 +333,9 @@ Since RYSAV is client-side only and not distributed on the Apple App Store, iOS 
 
 ---
 
-Developed with ❤️ by coflyn.
-GitHub: https://github.com/coflyn
-Instagram: @\_coflyn
+Developed with ❤️ by berusigma.
+GitHub: https://github.com/berusigma
+Instagram: @_berusigma
 
 ## License
 

@@ -994,7 +994,7 @@ wipeDataBtn?.addEventListener("click", () => {
 reportBugBtn?.addEventListener("click", () => {
   const deviceInfo = `Model: ${navigator.userAgent}\nPlatform: ${platformVal?.textContent || "Unknown"}\nVersion: ${APP_VERSION}`;
   const text = encodeURIComponent(
-    `Hi coflyn, I found a bug in RYSAV App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
+    `Hi berusigma, I found a bug in RYSAV App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
   );
   const whatsappUrl = `whatsapp://send?phone=6285194858996&text=${text}`;
   const whatsappWebUrl = `https://wa.me/6285194858996?text=${text}`;
