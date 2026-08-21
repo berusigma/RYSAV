@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIK Parser — Pemeriksaan KTP Indonesia</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body style="background: var(--bg-color); color: var(--text-main); font-family: 'Space Grotesk', sans-serif; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 700;">NIK KTP Parser</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Pemeriksaan & Extract Informasi NIK KTP Indonesia</p>
+      </div>
+      <a href="index.html" class="secondary-btn" style="text-decoration: none; padding: 8px 14px; font-size: 0.85rem; border-radius: 10px;">← Back to App</a>
+    </div>
+
+    <div class="media-card" style="padding: 20px; margin-bottom: 16px;">
+      <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 8px;">
+        Masukkan 16 Digit NIK KTP:
+      </label>
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <input
+          type="text"
+          id="nikInput"
+          class="custom-text-input"
+          placeholder="Contoh: 3201010101000001"
+          maxlength="16"
+          style="flex: 1; font-weight: 700; font-family: 'Space Mono', monospace; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);"
+        />
+        <button id="btnNikPaste" class="secondary-btn" title="Paste NIK">Paste</button>
+      </div>
+      <button id="btnNikParse" class="primary-btn" style="width: 100%;">
+        Parse & Analisis NIK
+      </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="nikLoadingSpinner" class="media-card hidden" style="padding: 24px; text-align: center;">
+      <span class="spinner"></span>
+      <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem;">Memproses data NIK & wilayah...</p>
+    </div>
+
+    <!-- Result Container -->
+    <div id="nikResultCard" class="media-card hidden"></div>
+  </div>
+
+  <script type="module">
+    import { initNikParserEvents } from './js/modules/nikparser.js';
+    initNikParserEvents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAY.MAIL — Disposable Temporary Email</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body style="background: var(--bg-color); color: var(--text-main); font-family: 'Space Grotesk', sans-serif; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 700;">RAY.MAIL (Temp Mail)</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Temporary Disposable Email System</p>
+      </div>
+      <a href="index.html" class="secondary-btn" style="text-decoration: none; padding: 8px 14px; font-size: 0.85rem; border-radius: 10px;">← Back to App</a>
+    </div>
+
+    <!-- Active Email Banner -->
+    <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+        <div>
+          <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Active Email Address</span>
+          <div id="tempActiveEmailDisplay" style="font-size: 1.1rem; font-weight: 800; font-family: 'Space Mono', monospace; word-break: break-all; margin-top: 2px;">
+            No Active Email
+          </div>
+        </div>
+        <span id="tempActiveServerTag" class="stat-pill" style="font-size: 0.72rem; padding: 3px 8px;">Server 1</span>
+      </div>
+
+      <!-- Quick Email Actions -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button id="btnCopyActiveEmail" class="secondary-btn btn-sm" style="flex: 1;">📋 Copy Email</button>
+        <button id="btnDeleteActiveEmail" class="secondary-btn btn-sm" style="color: #ef4444; border-color: #ef4444;">🗑️ Delete Email</button>
+      </div>
+    </div>
+
+    <!-- Account Switcher & History -->
+    <div class="media-card" style="padding: 14px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">Saved Email Accounts</span>
+        <button id="btnRefreshHistoryList" class="secondary-btn btn-sm" style="font-size: 0.75rem; padding: 2px 8px;">Refresh</button>
+      </div>
+      <div id="tempAccountsBar" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Separate Email Creation Tabs (Server 1 vs Server 2) -->
+    <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
+      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Create New Email</h3>
+      
+      <!-- Tab Switcher -->
+      <div style="display: flex; gap: 6px; background: var(--surface); padding: 4px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-color);">
+        <button id="tabServer1" class="temp-server-tab active" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+          Server 1 (Fast Auto)
+        </button>
+        <button id="tabServer2" class="temp-server-tab" style="flex: 1; padding: 8px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+          Server 2 (Custom Username)
+        </button>
+      </div>
+
+      <!-- Panel 1: Server 1 (Mail.tm) -->
+      <div id="panelServer1" class="temp-server-panel">
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">Generates a high-speed disposable email address on Server 1 (Mail.tm).</p>
+        <button id="btnCreateServer1Email" class="primary-btn" style="width: 100%;">
+          ⚡ Generate Server 1 Email
+        </button>
+      </div>
+
+      <!-- Panel 2: Server 2 (1TimeTech Custom) -->
+      <div id="panelServer2" class="temp-server-panel hidden">
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px;">Create a custom email alias with your preferred username on Server 2.</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Custom Username:</label>
+            <input type="text" id="tempCustomNameInput" class="custom-text-input" placeholder="e.g. febrywesker" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;" />
+          </div>
+          <div>
+            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 4px;">Select Domain:</label>
+            <select id="tempDomainSelectBox" class="custom-select-input" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main); font-weight: 700;">
+              <option value="@gmail10p.com">@gmail10p.com</option>
+              <option value="@oletters.com">@oletters.com</option>
+              <option value="@oemails.com">@oemails.com</option>
+              <option value="@oegmail.com">@oegmail.com</option>
+              <option value="@suiemail.com">@suiemail.com</option>
+              <option value="@voewo.com">@voewo.com</option>
+              <option value="@yanemail.com">@yanemail.com</option>
+            </select>
+          </div>
+        </div>
+        <button id="btnCreateServer2Email" class="primary-btn" style="width: 100%;">
+          ✨ Create Custom Server 2 Email
+        </button>
+      </div>
+
+      <!-- Manual Login Section -->
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-color);">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 6px;">Or Login to Existing Address:</span>
+        <div style="display: flex; gap: 8px;">
+          <input type="email" id="tempManualLoginInput" class="custom-text-input" placeholder="email@domain.com" style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);" />
+          <button id="btnManualLogin" class="secondary-btn">Login</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inbox Section -->
+    <div class="media-card" style="padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div id="tempPulseDot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
+          <h3 style="font-size: 1rem; font-weight: 700;">Inbox Messages (<span id="tempMsgCounter">0</span>)</h3>
+        </div>
+        <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Auto-sync 15s</span>
+      </div>
+      <div id="tempInboxList" class="temp-inbox-list" style="max-height: 380px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <!-- Read Message Modal -->
+  <div id="tempReadMsgModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 id="tempReadSubject">Message Subject</h3>
+        <button onclick="document.getElementById('tempReadMsgModal').classList.add('hidden')">✕</button>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">
+        From: <strong id="tempReadSender"></strong> | <span id="tempReadTime"></span>
+      </div>
+      <div id="tempReadBody" style="max-height: 300px; overflow-y: auto; line-height: 1.5; font-size: 0.9rem;"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initTempMailEvents } from './js/modules/tempmail.js';
+    initTempMailEvents();
+  </script>
+</body>
+</html>

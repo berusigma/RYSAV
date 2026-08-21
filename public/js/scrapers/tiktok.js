@@ -3,16 +3,117 @@ import { getCleanUrl } from "../utils/urlUtils.js";
 import { scraperFetch, createScraperResult } from "./httpHelper.js";
 import { scrapeVidsSave } from "./vidssave.js";
 
-export let _ttSource = "tikwm";
+export let _ttSource = "snaptik_tikwm";
 export function setTikTokSource(src) {
   _ttSource = src;
 }
 
 /**
- * 100% Reliable TikTok Scraper using TikWM API (POST & GET), TiklyDown, and VidsSave Fallbacks
+ * Snaptik Downloader (ajaxSearch)
  */
+export async function snaptikDown(url) {
+  try {
+    const postData = `q=${encodeURIComponent(url)}&lang=en`;
+    const response = await scraperFetch(
+      {
+        url: "https://snaptik.net/api/ajaxSearch",
+        method: "POST",
+        data: postData,
+        headers: {
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "x-requested-with": "XMLHttpRequest",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0",
+          origin: "https://snaptik.net",
+          referer: "https://snaptik.net/",
+        },
+        rawResponse: true,
+      },
+      "Snaptik API",
+    );
+
+    const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
+    if (!data || data.status !== "ok" || !data.data) {
+      throw new Error("Snaptik search failed");
+    }
+
+    const html = data.data;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const imgEl = doc.querySelector(".image-tik img");
+    const thumbnail = imgEl ? imgEl.getAttribute("src") : null;
+
+    const linkEls = Array.from(doc.querySelectorAll(".tik-button-dl"));
+    const links = linkEls.map((el) => el.getAttribute("href")).filter(Boolean);
+
+    return {
+      success: true,
+      results: {
+        thumbnail,
+        video: links[0] || links[1] || null,
+        hdVideo: links[1] || null,
+        audio: links[2] || links.find((l) => l.includes("music") || l.includes("audio")) || null,
+        allLinks: links,
+      },
+    };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+
+/**
+ * iPhone17ProMex - Base64 TikWM Metadata Extractor
+ */
+export async function iPhone17ProMex(i) {
+  const y = atob("aHR0cHM6Ly93d3cudGlrd20uY29tL2FwaS8="); // https://www.tikwm.com/api/
+  const res = await scraperFetch(
+    {
+      url: `${y}?url=${encodeURIComponent(i)}&hd=1`,
+      headers: { "User-Agent": CHROME_UA },
+      rawResponse: true,
+    },
+    "TikWM Metadata (iPhone17ProMex)",
+  );
+
+  const data = typeof res.data === "string" ? JSON.parse(res.data) : res.data;
+  if (!data || data.code !== 0 || !data.data) {
+    throw new Error("Get Metadata failed");
+  }
+
+  return data.data;
+}
+
+export async function getMeta(url) {
+  try {
+    const d = await iPhone17ProMex(url);
+
+    return {
+      success: true,
+      result: {
+        title: d.title || "TikTok Video",
+        author: d.author?.unique_id || d.author?.nickname || "TikTok User",
+        authorHandle: d.author?.unique_id ? `@${d.author.unique_id}` : "",
+        authorAvatar: d.author?.avatar || "",
+        thumbnail: d.cover || (d.images && d.images[0]) || "",
+        caption: d.title,
+        stats: {
+          views: d.play_count || 0,
+          likes: d.digg_count || 0,
+          comments: d.comment_count || 0,
+          shares: d.share_count || 0,
+        },
+        video: d.play ? (d.play.startsWith("http") ? d.play : `https://www.tikwm.com${d.play}`) : null,
+        hdVideo: d.hdplay ? (d.hdplay.startsWith("http") ? d.hdplay : `https://www.tikwm.com${d.hdplay}`) : null,
+        audio: d.music ? (d.music.startsWith("http") ? d.music : `https://www.tikwm.com${d.music}`) : null,
+        images: d.images || null,
+      },
+    };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+
 export async function scrapeTikTok(url) {
-  let currentStatus = null;
   try {
     const cleanUrl = getCleanUrl(url).split("?")[0];
     const regexTiktokUrl =
@@ -21,214 +122,68 @@ export async function scrapeTikTok(url) {
       throw new Error("Must be a valid tiktok url.");
     }
 
-    let resData = null;
-
-    // Method 1: TikWM POST
-    try {
-      const postData = `url=${encodeURIComponent(cleanUrl)}&hd=1`;
-      const response = await scraperFetch(
-        {
-          url: "https://www.tikwm.com/api/",
-          method: "POST",
-          data: postData,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": CHROME_UA,
-          },
-          rawResponse: true,
-        },
-        "TikWM API (POST)",
-      );
-      currentStatus = response.status;
-      const parsed = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
-      if (parsed && parsed.code === 0 && parsed.data) {
-        resData = parsed;
-      }
-    } catch (e) {
-      console.warn("TikWM POST failed, attempting GET...", e);
-    }
-
-    // Method 2: TikWM GET Fallback
-    if (!resData || resData.code !== 0 || !resData.data) {
-      try {
-        const getRes = await scraperFetch(
-          {
-            url: `https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}&hd=1`,
-            headers: { "User-Agent": CHROME_UA },
-            rawResponse: true,
-          },
-          "TikWM API (GET)",
-        );
-        currentStatus = getRes.status;
-        const parsed = typeof getRes.data === "string" ? JSON.parse(getRes.data) : getRes.data;
-        if (parsed && parsed.code === 0 && parsed.data) {
-          resData = parsed;
-        }
-      } catch (e) {
-        console.warn("TikWM GET failed, attempting TiklyDown...", e);
-      }
-    }
-
-    // Method 3: TiklyDown Fallback
-    if (!resData || resData.code !== 0 || !resData.data) {
-      try {
-        const tiklyRes = await scraperFetch(
-          {
-            url: `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(cleanUrl)}`,
-            headers: { "User-Agent": CHROME_UA },
-            rawResponse: true,
-          },
-          "TiklyDown API",
-        );
-        currentStatus = tiklyRes.status;
-        const tikly = typeof tiklyRes.data === "string" ? JSON.parse(tiklyRes.data) : tiklyRes.data;
-        if (tikly && (tikly.video || tikly.images)) {
-          resData = {
-            code: 0,
-            data: {
-              title: tikly.title || "TikTok Content",
-              cover: tikly.cover || tikly.thumbnail || "",
-              play: tikly.video?.noWatermark || tikly.video?.watermark || "",
-              hdplay: tikly.video?.noWatermark || "",
-              music: tikly.music?.play_url || "",
-              images: tikly.images ? tikly.images.map((i) => i.url || i) : null,
-              digg_count: tikly.stats?.likeCount || 0,
-              comment_count: tikly.stats?.commentCount || 0,
-              share_count: tikly.stats?.shareCount || 0,
-              play_count: tikly.stats?.playCount || 0,
-              author: {
-                unique_id: tikly.author?.unique_id || tikly.author?.username || "",
-                nickname: tikly.author?.nickname || tikly.author?.name || "TikTok User",
-                avatar: tikly.author?.avatar || "",
-              },
-              music_info: {
-                title: tikly.music?.title || "",
-                author: tikly.music?.author || "",
-              },
-            },
-          };
-        }
-      } catch (e) {
-        console.warn("TiklyDown fallback failed, trying VidsSave...", e);
-      }
-    }
-
-    // Method 4: VidsSave API All-in-One Fallback
-    if (!resData || resData.code !== 0 || !resData.data) {
-      try {
-        const vidsResult = await scrapeVidsSave(cleanUrl);
-        if (vidsResult && vidsResult.success) {
-          return vidsResult;
-        }
-      } catch (e) {
-        console.warn("VidsSave fallback failed...", e);
-      }
-    }
-
-    if (!resData || resData.code !== 0 || !resData.data) {
-      throw new Error("Gagal mengambil data. Pastikan URL valid, akun tidak privat, dan coba lagi.");
-    }
-
-    const data = resData.data;
-
-    // Structured metadata matching user requirement
-    const resultMeta = {
-      uploader: {
-        username: data.author?.unique_id || "",
-        nama: data.author?.nickname || "TikTok User",
-        avatar: data.author?.avatar || "",
-      },
-      deskripsi: data.title || "Tidak ada deskripsi.",
-      thumbnail: data.cover || (data.images && data.images[0]) || "",
-      statistik: {
-        like: data.digg_count || 0,
-        komentar: data.comment_count || 0,
-        share: data.share_count || 0,
-        play: data.play_count || 0,
-      },
-      media: {
-        video_regular: data.play
-          ? data.play.startsWith("http")
-            ? data.play
-            : `https://www.tikwm.com${data.play}`
-          : null,
-        video_hd: data.hdplay
-          ? data.hdplay.startsWith("http")
-            ? data.hdplay
-            : `https://www.tikwm.com${data.hdplay}`
-          : null,
-        sound_url: data.music
-          ? data.music.startsWith("http")
-            ? data.music
-            : `https://www.tikwm.com${data.music}`
-          : null,
-        foto_urls: data.images || null,
-      },
-    };
+    // Run meta & snaptik download in parallel (efficient CPU & fast response)
+    const [metaRes, snapRes] = await Promise.all([
+      getMeta(cleanUrl),
+      snaptikDown(cleanUrl),
+    ]);
 
     const downloads = [];
+    const metaData = metaRes.success ? metaRes.result : {};
+    const snapData = snapRes.success ? snapRes.results : {};
 
-    // Add Photo slideshow urls if present
-    if (
-      resultMeta.media.foto_urls &&
-      Array.isArray(resultMeta.media.foto_urls) &&
-      resultMeta.media.foto_urls.length > 0
-    ) {
-      resultMeta.media.foto_urls.forEach((img, idx) => {
+    // 1. Add Snaptik downloads
+    if (snapData.hdVideo) {
+      downloads.push({ type: "VIDEO HD (Snaptik Server)", url: snapData.hdVideo });
+    }
+    if (snapData.video && snapData.video !== snapData.hdVideo) {
+      downloads.push({ type: "VIDEO Regular (Snaptik)", url: snapData.video });
+    }
+    if (snapData.audio) {
+      downloads.push({ type: "MP3 Audio (Snaptik)", url: snapData.audio });
+    }
+
+    // 2. Add TikWM downloads if Snaptik missed any
+    if (metaData.hdVideo && !downloads.some((d) => d.url === metaData.hdVideo)) {
+      downloads.push({ type: "VIDEO HD (TikWM)", url: metaData.hdVideo });
+    }
+    if (metaData.video && !downloads.some((d) => d.url === metaData.video)) {
+      downloads.push({ type: "VIDEO Regular", url: metaData.video });
+    }
+    if (metaData.audio && !downloads.some((d) => d.url === metaData.audio)) {
+      downloads.push({ type: "MP3 Sound Track", url: metaData.audio });
+    }
+    if (metaData.images && Array.isArray(metaData.images)) {
+      metaData.images.forEach((img, idx) => {
         if (img) downloads.push({ type: `PHOTO ${idx + 1}`, url: img });
       });
     }
 
-    // Add Video Regular & HD
-    if (resultMeta.media.video_hd) {
-      downloads.push({
-        type: "VIDEO HD (No Watermark)",
-        url: resultMeta.media.video_hd,
-      });
-    }
-    if (resultMeta.media.video_regular) {
-      downloads.push({
-        type: "VIDEO Regular (No Watermark)",
-        url: resultMeta.media.video_regular,
-      });
-    }
-
-    // Add Music/Audio Track
-    if (resultMeta.media.sound_url) {
-      downloads.push({
-        type: "MP3 Sound Track",
-        url: resultMeta.media.sound_url,
-      });
-    }
-
+    // Fallback to VidsSave API if both failed or returned empty downloads
     if (downloads.length === 0) {
-      throw new Error("No downloadable media found for this TikTok URL.");
+      const vidsResult = await scrapeVidsSave(cleanUrl);
+      if (vidsResult && vidsResult.success) return vidsResult;
+      throw new Error("Gagal mengambil media TikTok. Pastikan URL publik dan coba lagi.");
     }
-
-    _ttSource = null;
 
     return createScraperResult(true, {
-      title: resultMeta.deskripsi,
-      author: resultMeta.uploader.nama,
-      authorHandle: resultMeta.uploader.username
-        ? `@${resultMeta.uploader.username}`
-        : "",
-      authorAvatar: resultMeta.uploader.avatar,
-      thumbnail: resultMeta.thumbnail,
-      stats: {
-        likes: resultMeta.statistik.like,
-        views: resultMeta.statistik.play,
-        comments: resultMeta.statistik.komentar,
-        shares: resultMeta.statistik.share,
-      },
-      music: data.music_info?.title
-        ? `${data.music_info.title} - ${data.music_info.author || ""}`
-        : "",
+      title: metaData.title || metaData.caption || "TikTok Video",
+      author: metaData.author || "TikTok Creator",
+      authorHandle: metaData.authorHandle || "",
+      authorAvatar: metaData.authorAvatar || "",
+      thumbnail: metaData.thumbnail || snapData.thumbnail || "",
+      stats: metaData.stats || { likes: 0, views: 0, comments: 0, shares: 0 },
       downloads,
       sourceUrl: url,
     });
   } catch (err) {
-    _ttSource = null;
-    return createScraperResult(false, err.message, currentStatus);
+    // Ultimate Fallback to VidsSave
+    try {
+      const vidsRes = await scrapeVidsSave(url);
+      if (vidsRes && vidsRes.success) return vidsRes;
+    } catch (e) {
+      // ignore
+    }
+    return createScraperResult(false, err.message);
   }
 }
