@@ -1314,6 +1314,13 @@ input[type="text"]:focus {
   min-height: 58px;
   box-sizing: border-box;
   gap: 12px;
+  overflow: visible !important;
+  z-index: 1;
+}
+
+.settings-item:focus-within,
+.settings-item:hover {
+  z-index: 9999 !important;
 }
 
 .custom-select {
@@ -1332,9 +1339,15 @@ input[type="text"]:focus {
   font-size: 0.85rem;
   box-sizing: border-box;
   flex-shrink: 0;
+  z-index: 1;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
+}
+
+.custom-select.active,
+.custom-select:focus {
+  z-index: 9999 !important;
 }
 
 .selected-text {
@@ -2769,5 +2782,141 @@ input[type="text"]:focus {
 @keyframes rotateMusicNote {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Temp Mail & Nav Badge Styles */
+.nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 10px;
+  padding: 1px 6px;
+  border: 1px solid var(--bg-color);
+  line-height: 1;
+}
+
+.temp-inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.msg-card {
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.msg-card:hover {
+  border-color: var(--primary);
+  transform: translateX(3px);
+}
+
+.msg-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.msg-sender {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msg-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.msg-subject {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msg-intro {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-inbox {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mail-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: var(--surface);
+}
+
+.mail-history-email {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.mail-history-server {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+
+.url-box {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  word-break: break-all;
+}
+
+.url-box a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.btn-copy-url {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 

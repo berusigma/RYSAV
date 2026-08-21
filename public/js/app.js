@@ -49,6 +49,8 @@ import {
   settingsSubPages,
 } from "./modules/core.js";
 
+import { initTempMailEvents, fetchInboxMessages } from "./modules/tempmail.js";
+
 // imports for side effects (settings UI, history, modals, update, intents, download)
 import "./modules/settings.js";
 import "./modules/history.js";
@@ -56,6 +58,8 @@ import "./modules/modals.js";
 import "./modules/update.js";
 import "./modules/intents.js";
 import "./modules/download.js";
+
+initTempMailEvents();
 
 // Batch Mode Toggle
 if (batchToggleBtn) {
@@ -158,7 +162,7 @@ initAuthListeners(currentLang);
 setUIState({ currentLang, isEditingHistory });
 renderHistory(onHistoryItemClick, onHistoryDeleteClick);
 
-const pages = ["home", "history", "settings"];
+const pages = ["home", "history", "tempmail", "settings"];
 
 async function switchPage(pageId) {
   const isNative = window.Capacitor?.isNativePlatform?.();
@@ -223,6 +227,11 @@ async function switchPage(pageId) {
   // Refresh history if entering history page
   if (pageId === "history") {
     renderHistory(onHistoryItemClick, onHistoryDeleteClick);
+  }
+
+  // Refresh inbox if entering tempmail page
+  if (pageId === "tempmail") {
+    fetchInboxMessages();
   }
 }
 

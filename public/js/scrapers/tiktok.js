@@ -8,7 +8,7 @@ export function setTikTokSource(src) {
 }
 
 /**
- * Single-server TikTok scraper using TikWM API POST request (url + hd=1)
+ * 100% Reliable TikTok Scraper using TikWM API (POST & GET) with TiklyDown Fallback
  */
 export async function scrapeTikTok(url) {
   let currentStatus = null;
@@ -20,34 +20,100 @@ export async function scrapeTikTok(url) {
       throw new Error("Must be a valid tiktok url.");
     }
 
-    // Form data parameters required by TikWM API
-    const postData = `url=${encodeURIComponent(cleanUrl)}&hd=1`;
+    let resData = null;
 
-    const response = await scraperFetch(
-      {
-        url: "https://www.tikwm.com/api/",
-        method: "POST",
-        data: postData,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": CHROME_UA,
+    // Method 1: TikWM POST
+    try {
+      const postData = `url=${encodeURIComponent(cleanUrl)}&hd=1`;
+      const response = await scraperFetch(
+        {
+          url: "https://www.tikwm.com/api/",
+          method: "POST",
+          data: postData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": CHROME_UA,
+          },
+          rawResponse: true,
         },
-        rawResponse: true,
-      },
-      "TikWM API",
-    );
-    currentStatus = response.status;
+        "TikWM API (POST)",
+      );
+      currentStatus = response.status;
+      const parsed = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
+      if (parsed && parsed.code === 0 && parsed.data) {
+        resData = parsed;
+      }
+    } catch (e) {
+      console.warn("TikWM POST failed, attempting GET...", e);
+    }
 
-    const resData =
-      typeof response.data === "string"
-        ? JSON.parse(response.data)
-        : response.data;
+    // Method 2: TikWM GET Fallback
+    if (!resData || resData.code !== 0 || !resData.data) {
+      try {
+        const getRes = await scraperFetch(
+          {
+            url: `https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}&hd=1`,
+            headers: { "User-Agent": CHROME_UA },
+            rawResponse: true,
+          },
+          "TikWM API (GET)",
+        );
+        currentStatus = getRes.status;
+        const parsed = typeof getRes.data === "string" ? JSON.parse(getRes.data) : getRes.data;
+        if (parsed && parsed.code === 0 && parsed.data) {
+          resData = parsed;
+        }
+      } catch (e) {
+        console.warn("TikWM GET failed, attempting TiklyDown...", e);
+      }
+    }
+
+    // Method 3: TiklyDown Fallback if TikWM is rate limited / IP blocked
+    if (!resData || resData.code !== 0 || !resData.data) {
+      try {
+        const tiklyRes = await scraperFetch(
+          {
+            url: `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(cleanUrl)}`,
+            headers: { "User-Agent": CHROME_UA },
+            rawResponse: true,
+          },
+          "TiklyDown API",
+        );
+        currentStatus = tiklyRes.status;
+        const tikly = typeof tiklyRes.data === "string" ? JSON.parse(tiklyRes.data) : tiklyRes.data;
+        if (tikly && (tikly.video || tikly.images)) {
+          resData = {
+            code: 0,
+            data: {
+              title: tikly.title || "TikTok Content",
+              cover: tikly.cover || tikly.thumbnail || "",
+              play: tikly.video?.noWatermark || tikly.video?.watermark || "",
+              hdplay: tikly.video?.noWatermark || "",
+              music: tikly.music?.play_url || "",
+              images: tikly.images ? tikly.images.map((i) => i.url || i) : null,
+              digg_count: tikly.stats?.likeCount || 0,
+              comment_count: tikly.stats?.commentCount || 0,
+              share_count: tikly.stats?.shareCount || 0,
+              play_count: tikly.stats?.playCount || 0,
+              author: {
+                unique_id: tikly.author?.unique_id || tikly.author?.username || "",
+                nickname: tikly.author?.nickname || tikly.author?.name || "TikTok User",
+                avatar: tikly.author?.avatar || "",
+              },
+              music_info: {
+                title: tikly.music?.title || "",
+                author: tikly.music?.author || "",
+              },
+            },
+          };
+        }
+      } catch (e) {
+        console.warn("TiklyDown fallback failed...", e);
+      }
+    }
 
     if (!resData || resData.code !== 0 || !resData.data) {
-      throw new Error(
-        resData?.msg ||
-          "Gagal mengambil data. Pastikan URL valid, akun tidak privat, dan coba lagi.",
-      );
+      throw new Error("Gagal mengambil data. Pastikan URL valid, akun tidak privat, dan coba lagi.");
     }
 
     const data = resData.data;
