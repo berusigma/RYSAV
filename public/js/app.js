@@ -51,6 +51,7 @@ import {
 
 import { initTempMailEvents, fetchInboxMessages } from "./modules/tempmail.js";
 import { initNikParserEvents } from "./modules/nikparser.js";
+import { initStreamEvents, loadTrendingMovies } from "./modules/stream.js";
 
 // imports for side effects (settings UI, history, modals, update, intents, download)
 import "./modules/settings.js";
@@ -62,6 +63,7 @@ import "./modules/download.js";
 
 initTempMailEvents();
 initNikParserEvents();
+initStreamEvents();
 
 // Batch Mode Toggle
 if (batchToggleBtn) {
@@ -263,6 +265,9 @@ document.addEventListener("click", (e) => {
         subPage.classList.remove("hidden");
         if (targetSubPageId === "toolsTempMail") {
           fetchInboxMessages();
+        }
+        if (targetSubPageId === "toolsStream") {
+          loadTrendingMovies();
         }
       }
     }

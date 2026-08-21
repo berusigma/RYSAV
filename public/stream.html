@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>LK21 — Streaming Film & TV Series Sub Indo</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Inter", sans-serif; background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+    .app-container { width: 100%; max-width: 600px; display: flex; flex-direction: column; }
+    .logo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .logo-icon { width: 32px; height: 32px; color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- HEADER DENGAN LOGO SVG -->
+    <div class="logo-header">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+        <line x1="7" y1="2" x2="7" y2="22"></line>
+        <line x1="17" y1="2" x2="17" y2="22"></line>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <line x1="2" y1="7" x2="7" y2="7"></line>
+        <line x1="2" y1="17" x2="7" y2="17"></line>
+        <line x1="17" y1="17" x2="22" y2="17"></line>
+        <line x1="17" y1="7" x2="22" y2="7"></line>
+      </svg>
+      <div>
+        <h1 style="font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">STREAM FILM</h1>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; letter-spacing: 0.5px;">LK21 Movie & Series Sub Indo</p>
+      </div>
+      <a href="index.html" class="btn-action" style="margin-left: auto; padding: 6px 12px; font-size: 0.75rem;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back
+      </a>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="media-card" style="padding: 16px; margin-bottom: 20px;">
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="streamSearchInput" class="custom-text-input" placeholder="Cari film atau serial TV (e.g. Avengers)..." style="flex: 1;" />
+        <button id="btnStreamSearch" class="btn-action">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- SPINNER -->
+    <div id="streamSpinner" class="media-card hidden" style="padding: 30px; text-align: center;">
+      <span class="spinner"></span>
+      <p style="margin-top: 10px; font-size: 0.88rem; font-weight: 600;">Memuat film...</p>
+    </div>
+
+    <!-- MOVIE GRID -->
+    <div id="streamMovieGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px;">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+
+  <!-- PLAYER & DETAIL MODAL -->
+  <div id="streamPlayerModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 600px; width: 95%;">
+      <div class="modal-header">
+        <h3 style="font-size: 1rem; font-weight: 800;">Player Streaming</h3>
+        <button onclick="document.getElementById('streamPlayerModal').classList.add('hidden')">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="streamDetailSpinner" style="text-align: center; padding: 40px;">
+          <span class="spinner"></span>
+          <p style="margin-top: 10px; font-weight: 600;">Memuat player & detail...</p>
+        </div>
+        <div id="streamDetailContent" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initStreamEvents } from './js/modules/stream.js';
+    initStreamEvents();
+  </script>
+</body>
+</html>
