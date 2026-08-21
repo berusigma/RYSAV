@@ -630,13 +630,86 @@ export function renderResult(result, originalUrl) {
     downloadList.appendChild(pdfBtn);
   }
 
+  // Format count helper (e.g. 12.5K, 1.2M)
+  const formatCount = (num) => {
+    if (!num || isNaN(num)) return "0";
+    const n = parseInt(num, 10);
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
+    if (n >= 1000) return (n / 1000).toFixed(1) + "K";
+    return n.toLocaleString();
+  };
+
+  // Render Author Badge
+  const resultAuthor = document.getElementById("resultAuthor");
+  if (resultAuthor) {
+    if (result.author || result.authorHandle) {
+      resultAuthor.classList.remove("hidden");
+      const avatarHtml = result.authorAvatar
+        ? `<img src="${escapeHtml(result.authorAvatar)}" class="author-avatar" onerror="this.style.display='none'" />`
+        : `<div class="author-avatar-placeholder"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
+      resultAuthor.innerHTML = `
+        ${avatarHtml}
+        <div class="author-info">
+          <span class="author-name">${escapeHtml(result.author || "User")}</span>
+          ${result.authorHandle ? `<span class="author-handle">${escapeHtml(result.authorHandle)}</span>` : ""}
+        </div>
+      `;
+    } else {
+      resultAuthor.classList.add("hidden");
+      resultAuthor.innerHTML = "";
+    }
+  }
+
+  // Render Stats Row (Likes, Views, Comments, Shares)
+  const resultStats = document.getElementById("resultStats");
+  if (resultStats) {
+    if (result.stats && (result.stats.likes || result.stats.views || result.stats.comments || result.stats.shares)) {
+      resultStats.classList.remove("hidden");
+      const stats = result.stats;
+      let html = "";
+      if (stats.likes) {
+        html += `<div class="stat-pill" title="Likes"><span class="stat-icon">❤️</span><span class="stat-val">${formatCount(stats.likes)}</span></div>`;
+      }
+      if (stats.views) {
+        html += `<div class="stat-pill" title="Views"><span class="stat-icon">👁️</span><span class="stat-val">${formatCount(stats.views)}</span></div>`;
+      }
+      if (stats.comments) {
+        html += `<div class="stat-pill" title="Comments"><span class="stat-icon">💬</span><span class="stat-val">${formatCount(stats.comments)}</span></div>`;
+      }
+      if (stats.shares) {
+        html += `<div class="stat-pill" title="Shares"><span class="stat-icon">🔁</span><span class="stat-val">${formatCount(stats.shares)}</span></div>`;
+      }
+      resultStats.innerHTML = html;
+    } else {
+      resultStats.classList.add("hidden");
+      resultStats.innerHTML = "";
+    }
+  }
+
+  // Render Music Badge
+  const resultMusic = document.getElementById("resultMusic");
+  if (resultMusic) {
+    if (result.music) {
+      resultMusic.classList.remove("hidden");
+      resultMusic.innerHTML = `
+        <div class="music-pill">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <span>${escapeHtml(result.music)}</span>
+        </div>
+      `;
+    } else {
+      resultMusic.classList.add("hidden");
+      resultMusic.innerHTML = "";
+    }
+  }
+
   let cleanTitleText = (
     result.title || translations[currentLang]["label-content"]
   )
     .replace(/#[^\s#]+/g, "")
     .replace(/\s{2,}/g, " ")
     .trim();
-  if (resultTitle) resultTitle.textContent = truncate(cleanTitleText, 80);
+  if (resultTitle) resultTitle.textContent = truncate(cleanTitleText, 140);
 
   if (downloadList) {
     result.downloads.forEach((dl, index) => {

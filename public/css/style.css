@@ -2578,3 +2578,199 @@ input[type="text"]:focus {
 #batchCloseBtn:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
+
+/* ==========================================================================
+   GLASSMORPHISM DESIGN SYSTEM & RICH METADATA UI
+   ========================================================================== */
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.22), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(168, 85, 247, 0.2), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.18), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.15), transparent 45%);
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(60px);
+  animation: ambientMeshGlow 15s ease-in-out infinite alternate;
+}
+
+@keyframes ambientMeshGlow {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.08) rotate(4deg); }
+}
+
+.media-card, .input-wrapper, .skeleton-card, .settings-menu-item, .settings-item, .modal-content, .chip {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+  border-radius: 18px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="dark"] .media-card, 
+[data-theme="dark"] .input-wrapper, 
+[data-theme="dark"] .skeleton-card, 
+[data-theme="dark"] .settings-menu-item, 
+[data-theme="dark"] .settings-item, 
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .chip {
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.media-card:hover, .input-wrapper:focus-within, .settings-menu-item:hover {
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.25) !important;
+  transform: translateY(-2px);
+}
+
+#downloadBtn {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4) !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#downloadBtn:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.5) !important;
+}
+
+/* Glassmorphism Metadata Components */
+.result-author-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+}
+
+.author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.author-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.author-handle {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.result-stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 14px 0;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.stat-pill:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.stat-icon {
+  font-size: 0.9rem;
+}
+
+.stat-val {
+  font-family: "Outfit", sans-serif;
+  letter-spacing: 0.3px;
+}
+
+.result-music-container {
+  margin-bottom: 14px;
+}
+
+.music-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.music-pill svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  animation: rotateMusicNote 4s linear infinite;
+}
+
+@keyframes rotateMusicNote {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+

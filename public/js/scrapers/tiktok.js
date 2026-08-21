@@ -74,6 +74,57 @@ export async function scrapeTikTok(url) {
       throw new Error("Must be a valid tiktok url.");
     }
 
+    // Automatic Tikwm API check for rich metadata (likes, views, comments, shares, author avatar & nickname)
+    try {
+      const tikwmRes = await scraperFetch(
+        {
+          url: `https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}`,
+          headers: { "User-Agent": CHROME_UA },
+          rawResponse: true,
+        },
+        "Tikwm API",
+      );
+      const resData = typeof tikwmRes.data === "string" ? JSON.parse(tikwmRes.data) : tikwmRes.data;
+      if (resData && resData.code === 0 && resData.data) {
+        const d = resData.data;
+        const downloads = [];
+        if (d.images && Array.isArray(d.images) && d.images.length > 0) {
+          d.images.forEach((img) => downloads.push({ type: "PHOTO", url: img }));
+        }
+        if (d.play) {
+          downloads.push({ type: "VIDEO", url: d.play.startsWith("http") ? d.play : `https://www.tikwm.com${d.play}` });
+        }
+        if (d.wmplay) {
+          downloads.push({ type: "VIDEO (Watermark)", url: d.wmplay });
+        }
+        if (d.music) {
+          downloads.push({ type: "MP3", url: d.music.startsWith("http") ? d.music : `https://www.tikwm.com${d.music}` });
+        }
+        if (downloads.length > 0) {
+          _ttSource = null;
+          return createScraperResult(true, {
+            title: d.title || "TikTok Content",
+            author: d.author?.nickname || "TikTok User",
+            authorHandle: d.author?.unique_id ? `@${d.author.unique_id}` : "",
+            authorAvatar: d.author?.avatar || "",
+            thumbnail: d.cover || (d.images && d.images[0]) || "",
+            stats: {
+              likes: d.digg_count || 0,
+              views: d.play_count || 0,
+              comments: d.comment_count || 0,
+              shares: d.share_count || 0,
+              downloads: d.download_count || 0,
+            },
+            music: d.music_info?.title ? `${d.music_info.title} - ${d.music_info.author || ""}` : "",
+            downloads,
+            sourceUrl: url,
+          });
+        }
+      }
+    } catch (tikwmErr) {
+      console.warn("[scrapeTikTok] Tikwm API auto-check skipped, trying selected server...", tikwmErr);
+    }
+
     if (!_ttSource) return { requireSource: true };
 
     if (_ttSource === "snaptik") {
