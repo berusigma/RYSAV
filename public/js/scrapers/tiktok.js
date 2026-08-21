@@ -2,68 +2,14 @@ import { CHROME_UA } from "../utils/index.js";
 import { getCleanUrl } from "../utils/urlUtils.js";
 import { scraperFetch, createScraperResult } from "./httpHelper.js";
 
-async function decryptSnapTikAes(id, encryptedBase64) {
-  const salt = "sn4pt1k_v3r1fy2026";
-  const str = salt + ":" + id;
-  const encoder = new TextEncoder();
-  const keyBytes = await window.crypto.subtle.digest(
-    "SHA-256",
-    encoder.encode(str),
-  );
-
-  const binaryString = atob(encryptedBase64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-
-  const iv = bytes.slice(0, 16);
-  const data = bytes.slice(16);
-
-  const cryptoKey = await window.crypto.subtle.importKey(
-    "raw",
-    keyBytes,
-    { name: "AES-CBC" },
-    false,
-    ["decrypt"],
-  );
-
-  const decryptedBuffer = await window.crypto.subtle.decrypt(
-    { name: "AES-CBC", iv },
-    cryptoKey,
-    data,
-  );
-
-  return new TextDecoder().decode(decryptedBuffer);
-}
-
-function solveSnapTikChallenge(challenge) {
-  switch (challenge.t) {
-    case "b":
-      return ((challenge.a ^ challenge.b) >> challenge.s) & 255;
-    case "r":
-      return challenge.n.reduce((m, f) => m + f, 0) * 2 + 1;
-    case "c":
-      return challenge.w.charCodeAt(challenge.i) * challenge.m;
-    case "m":
-      return ((challenge.a + challenge.b) % 100) * challenge.c;
-    case "n":
-      return (
-        challenge.a * challenge.b +
-        challenge.b * challenge.c +
-        challenge.c * challenge.a -
-        challenge.a
-      );
-    default:
-      throw new Error("Unknown challenge type: " + challenge.t);
-  }
-}
-
-export let _ttSource = null;
+export let _ttSource = "tikwm";
 export function setTikTokSource(src) {
   _ttSource = src;
 }
 
+/**
+ * Single-server TikTok scraper using TikWM API POST request (url + hd=1)
+ */
 export async function scrapeTikTok(url) {
   let currentStatus = null;
   try {
@@ -74,312 +20,134 @@ export async function scrapeTikTok(url) {
       throw new Error("Must be a valid tiktok url.");
     }
 
-    // Automatic Tikwm API check for rich metadata (likes, views, comments, shares, author avatar & nickname)
-    try {
-      const tikwmRes = await scraperFetch(
-        {
-          url: `https://www.tikwm.com/api/?url=${encodeURIComponent(cleanUrl)}`,
-          headers: { "User-Agent": CHROME_UA },
-          rawResponse: true,
+    // Form data parameters required by TikWM API
+    const postData = `url=${encodeURIComponent(cleanUrl)}&hd=1`;
+
+    const response = await scraperFetch(
+      {
+        url: "https://www.tikwm.com/api/",
+        method: "POST",
+        data: postData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": CHROME_UA,
         },
-        "Tikwm API",
+        rawResponse: true,
+      },
+      "TikWM API",
+    );
+    currentStatus = response.status;
+
+    const resData =
+      typeof response.data === "string"
+        ? JSON.parse(response.data)
+        : response.data;
+
+    if (!resData || resData.code !== 0 || !resData.data) {
+      throw new Error(
+        resData?.msg ||
+          "Gagal mengambil data. Pastikan URL valid, akun tidak privat, dan coba lagi.",
       );
-      const resData = typeof tikwmRes.data === "string" ? JSON.parse(tikwmRes.data) : tikwmRes.data;
-      if (resData && resData.code === 0 && resData.data) {
-        const d = resData.data;
-        const downloads = [];
-        if (d.images && Array.isArray(d.images) && d.images.length > 0) {
-          d.images.forEach((img) => downloads.push({ type: "PHOTO", url: img }));
-        }
-        if (d.play) {
-          downloads.push({ type: "VIDEO", url: d.play.startsWith("http") ? d.play : `https://www.tikwm.com${d.play}` });
-        }
-        if (d.wmplay) {
-          downloads.push({ type: "VIDEO (Watermark)", url: d.wmplay });
-        }
-        if (d.music) {
-          downloads.push({ type: "MP3", url: d.music.startsWith("http") ? d.music : `https://www.tikwm.com${d.music}` });
-        }
-        if (downloads.length > 0) {
-          _ttSource = null;
-          return createScraperResult(true, {
-            title: d.title || "TikTok Content",
-            author: d.author?.nickname || "TikTok User",
-            authorHandle: d.author?.unique_id ? `@${d.author.unique_id}` : "",
-            authorAvatar: d.author?.avatar || "",
-            thumbnail: d.cover || (d.images && d.images[0]) || "",
-            stats: {
-              likes: d.digg_count || 0,
-              views: d.play_count || 0,
-              comments: d.comment_count || 0,
-              shares: d.share_count || 0,
-              downloads: d.download_count || 0,
-            },
-            music: d.music_info?.title ? `${d.music_info.title} - ${d.music_info.author || ""}` : "",
-            downloads,
-            sourceUrl: url,
-          });
-        }
-      }
-    } catch (tikwmErr) {
-      console.warn("[scrapeTikTok] Tikwm API auto-check skipped, trying selected server...", tikwmErr);
     }
 
-    if (!_ttSource) return { requireSource: true };
+    const data = resData.data;
 
-    if (_ttSource === "snaptik") {
-      const tokenRes = await scraperFetch(
-        {
-          url: "https://snaptik.app/api/token",
-          method: "POST",
-          headers: {
-            "User-Agent": CHROME_UA,
-            "X-Requested-With": "XMLHttpRequest",
-            "Content-Type": "application/json",
-            Origin: "https://snaptik.app",
-            Referer: "https://snaptik.app/",
-          },
-          data: {},
-          rawResponse: true,
-        },
-        "SnapTik Token",
-      );
-      currentStatus = tokenRes.status;
-      const tData =
-        typeof tokenRes.data === "string"
-          ? JSON.parse(tokenRes.data)
-          : tokenRes.data;
-      if (!tData || !tData.id || !tData.p)
-        throw new Error("Failed to retrieve token from SnapTik API.");
+    // Structured metadata matching user requirement
+    const resultMeta = {
+      uploader: {
+        username: data.author?.unique_id || "",
+        nama: data.author?.nickname || "TikTok User",
+        avatar: data.author?.avatar || "",
+      },
+      deskripsi: data.title || "Tidak ada deskripsi.",
+      thumbnail: data.cover || (data.images && data.images[0]) || "",
+      statistik: {
+        like: data.digg_count || 0,
+        komentar: data.comment_count || 0,
+        share: data.share_count || 0,
+        play: data.play_count || 0,
+      },
+      media: {
+        video_regular: data.play
+          ? data.play.startsWith("http")
+            ? data.play
+            : `https://www.tikwm.com${data.play}`
+          : null,
+        video_hd: data.hdplay
+          ? data.hdplay.startsWith("http")
+            ? data.hdplay
+            : `https://www.tikwm.com${data.hdplay}`
+          : null,
+        sound_url: data.music
+          ? data.music.startsWith("http")
+            ? data.music
+            : `https://www.tikwm.com${data.music}`
+          : null,
+        foto_urls: data.images || null,
+      },
+    };
 
-      const decryptedStr = await decryptSnapTikAes(tData.id, tData.p);
-      const challenge = JSON.parse(decryptedStr);
-      const _e = challenge._e;
-      const _h = challenge._h;
-      delete challenge._e;
-      delete challenge._h;
-      const challengeResult = solveSnapTikChallenge(challenge);
-      const xVerify = `${tData.id}:${challengeResult}:${_e}:${_h}`;
+    const downloads = [];
 
-      const extractRes = await scraperFetch(
-        {
-          url: `https://snaptik.app/api/extract?url=${encodeURIComponent(cleanUrl)}`,
-          headers: {
-            "User-Agent": CHROME_UA,
-            "X-Requested-With": "XMLHttpRequest",
-            "X-Verify": xVerify,
-            Origin: "https://snaptik.app",
-            Referer: "https://snaptik.app/",
-          },
-          rawResponse: true,
-        },
-        "SnapTik Extract",
-      );
-      currentStatus = extractRes.status;
-      const exData =
-        typeof extractRes.data === "string"
-          ? JSON.parse(extractRes.data)
-          : extractRes.data;
-      if (!exData || !exData.success || !exData.data) {
-        throw new Error(exData?.message || "SnapTik extraction failed.");
-      }
-
-      const info = exData.data;
-      const downloads = [];
-
-      const photos =
-        info.photoUrls || info.photos || info.images || info.slides;
-      if (photos && Array.isArray(photos) && photos.length > 0) {
-        photos.forEach((img) => {
-          const photoUrl =
-            typeof img === "string"
-              ? img
-              : img?.url || img?.src || img?.link || img?.downloadUrl || "";
-          if (photoUrl) {
-            downloads.push({ type: "PHOTO", url: photoUrl });
-          }
-        });
-      }
-
-      if (info.downloadUrl) {
-        downloads.push({ type: "MP4", url: info.downloadUrl });
-      }
-      if (info.hdDownloadUrl) {
-        const hdUrl = info.hdDownloadUrl.startsWith("http")
-          ? info.hdDownloadUrl
-          : "https://snaptik.app" + info.hdDownloadUrl;
-        downloads.push({ type: "MP4 (HD)", url: hdUrl });
-      }
-
-      if (!downloads.length)
-        throw new Error("No download links found from SnapTik.");
-
-      _ttSource = null;
-      return createScraperResult(true, {
-        title: info.title || "TikTok Video",
-        author: info.author?.nickname || info.author?.name || "TikTok User",
-        thumbnail: info.thumbnail || "",
-        downloads,
-        sourceUrl: url,
+    // Add Photo slideshow urls if present
+    if (
+      resultMeta.media.foto_urls &&
+      Array.isArray(resultMeta.media.foto_urls) &&
+      resultMeta.media.foto_urls.length > 0
+    ) {
+      resultMeta.media.foto_urls.forEach((img, idx) => {
+        if (img) downloads.push({ type: `PHOTO ${idx + 1}`, url: img });
       });
     }
 
-    if (_ttSource === "tiktokio") {
-      const res = await scraperFetch(
-        {
-          url: "https://tiktokio.com/api/v1/tk/html",
-          method: "POST",
-          data: {
-            vid: cleanUrl,
-            prefix: "tiktokio.com",
-          },
-          headers: {
-            "User-Agent": CHROME_UA,
-            "Content-Type": "application/json",
-            Origin: "https://tiktokio.com",
-            Referer: "https://tiktokio.com/",
-          },
-          rawResponse: true,
-        },
-        "TikTokIO",
-      );
-      currentStatus = res.status;
-
-      let html = res.data;
-      if (typeof html === "object" && html !== null) {
-        html = JSON.stringify(html);
-      }
-      if (typeof html !== "string") {
-        html = "";
-      }
-      if (
-        !html ||
-        html.includes("Please paste a valid link") ||
-        html.includes("Error")
-      ) {
-        throw new Error("Invalid link or failed to fetch data from tiktokio.");
-      }
-
-      let title = "TikTok Content";
-      const titleMatch = html.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
-      if (titleMatch) {
-        title = titleMatch[1].replace(/<[^>]+>/g, "").trim();
-      }
-
-      let thumbnail = "";
-      const thumbMatch = html.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
-      if (thumbMatch) {
-        thumbnail = thumbMatch[1].replace(/&#38;/g, "&");
-      }
-
-      const isSlideshow =
-        html.includes('class="images-grid"') ||
-        html.includes('class="image-item"');
-
-      const authorMatch = cleanUrl.match(/@([^\/]+)/);
-      const author = authorMatch ? authorMatch[1] : "Unknown";
-
-      const downloads = [];
-
-      if (isSlideshow) {
-        const slidesRegex =
-          /<div[^>]*class=["'][^"']*image-item[^"']*["'][^>]*>[\s\S]*?<\/div>/gi;
-        let slideMatch;
-        while ((slideMatch = slidesRegex.exec(html)) !== null) {
-          const slideHtml = slideMatch[0];
-          const aHref = slideHtml.match(/href=["']([^"']+)/i);
-          if (aHref && aHref[1] !== "#") {
-            const photoUrl = aHref[1].replace(/&#38;/g, "&");
-            if (!downloads.some((d) => d.url === photoUrl)) {
-              downloads.push({ type: "PHOTO", url: photoUrl, isMirror: false });
-            }
-          } else {
-            const imgSrc = slideHtml.match(/src=["']([^"']+)/i);
-            if (imgSrc) {
-              const photoUrl = imgSrc[1].replace(/&#38;/g, "&");
-              if (!downloads.some((d) => d.url === photoUrl)) {
-                downloads.push({
-                  type: "PHOTO",
-                  url: photoUrl,
-                  isMirror: false,
-                });
-              }
-            }
-          }
-        }
-
-        const mp3TagRegex = /<a[\s\S]*?<\/a>/gi;
-        let mp3Match;
-        while ((mp3Match = mp3TagRegex.exec(html)) !== null) {
-          const tag = mp3Match[0];
-          if (
-            tag.includes("download-btn-purple") ||
-            tag.toLowerCase().includes("mp3") ||
-            tag.toLowerCase().includes("music")
-          ) {
-            const h = tag.match(/href=["']([^"']+)/i);
-            if (h && h[1] !== "#") {
-              const audioUrl = h[1].replace(/&#38;/g, "&");
-              if (!downloads.some((d) => d.url === audioUrl)) {
-                downloads.push({ type: "MP3", url: audioUrl, isMirror: false });
-              }
-            }
-          }
-        }
-      } else {
-        const anchorTagRegex = /<a[\s\S]*?<\/a>/gi;
-        let anchorMatch;
-        while ((anchorMatch = anchorTagRegex.exec(html)) !== null) {
-          const tag = anchorMatch[0];
-
-          if (!tag.includes("download-btn")) continue;
-
-          const hrefM = tag.match(/href=["']([^"']+)/i);
-          if (!hrefM || hrefM[1] === "#") continue;
-          const href = hrefM[1].replace(/&#38;/g, "&");
-
-          const innerText = tag
-            .replace(/<[^>]+>/g, "")
-            .trim()
-            .toLowerCase();
-
-          let label = null;
-          if (
-            innerText.includes("without watermark") ||
-            tag.includes("download-btn-blue") ||
-            tag.includes("download-btn-green")
-          ) {
-            label = "VIDEO";
-          } else if (
-            innerText.includes("mp3") ||
-            innerText.includes("music") ||
-            tag.includes("download-btn-purple")
-          ) {
-            label = "MP3";
-          }
-
-          if (label) {
-            const isMirror = downloads.some((d) => d.type === label);
-            downloads.push({ type: label, url: href, isMirror });
-          }
-        }
-      }
-
-      if (downloads.length === 0) {
-        throw new Error("No download links found.");
-      }
-
-      _ttSource = null;
-      return createScraperResult(true, {
-        title,
-        author,
-        thumbnail,
-        downloads,
-        sourceUrl: url,
+    // Add Video Regular & HD
+    if (resultMeta.media.video_hd) {
+      downloads.push({
+        type: "VIDEO HD (No Watermark)",
+        url: resultMeta.media.video_hd,
+      });
+    }
+    if (resultMeta.media.video_regular) {
+      downloads.push({
+        type: "VIDEO Regular (No Watermark)",
+        url: resultMeta.media.video_regular,
       });
     }
 
-    throw new Error("Invalid source selected.");
+    // Add Music/Audio Track
+    if (resultMeta.media.sound_url) {
+      downloads.push({
+        type: "MP3 Sound Track",
+        url: resultMeta.media.sound_url,
+      });
+    }
+
+    if (downloads.length === 0) {
+      throw new Error("No downloadable media found for this TikTok URL.");
+    }
+
+    _ttSource = null;
+
+    return createScraperResult(true, {
+      title: resultMeta.deskripsi,
+      author: resultMeta.uploader.nama,
+      authorHandle: resultMeta.uploader.username
+        ? `@${resultMeta.uploader.username}`
+        : "",
+      authorAvatar: resultMeta.uploader.avatar,
+      thumbnail: resultMeta.thumbnail,
+      stats: {
+        likes: resultMeta.statistik.like,
+        views: resultMeta.statistik.play,
+        comments: resultMeta.statistik.komentar,
+        shares: resultMeta.statistik.share,
+      },
+      music: data.music_info?.title
+        ? `${data.music_info.title} - ${data.music_info.author || ""}`
+        : "",
+      downloads,
+      sourceUrl: url,
+    });
   } catch (err) {
     _ttSource = null;
     return createScraperResult(false, err.message, currentStatus);
