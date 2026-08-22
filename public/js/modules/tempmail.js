@@ -272,12 +272,13 @@ function renderInboxList(messages) {
 
   if (messages.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 32px 16px;">
-        <svg style="width: 42px; height: 42px; margin-bottom: 8px; opacity: 0.4;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <div style="text-align: center; padding: 36px 16px;">
+        <svg style="width: 48px; height: 48px; margin-bottom: 10px; opacity: 0.3; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
           <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
-        <p style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500;">Inbox kosong. Menunggu email masuk...</p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Inbox Kosong</p>
+        <p style="font-size: 0.78rem; color: var(--text-secondary); opacity: 0.7; margin-top: 4px;">Menunggu email masuk secara otomatis...</p>
       </div>
     `;
     return;
@@ -287,30 +288,25 @@ function renderInboxList(messages) {
   messages.forEach((msg) => {
     const card = document.createElement("div");
     card.className = "msg-card";
-    card.style.cssText = "padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border-color); margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease;";
 
     const date = new Date(msg.createdAt);
     const timeStr = isNaN(date.getTime())
       ? ""
       : `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
-    card.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${escapeHtml(msg.from)}</span>
-        <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">${timeStr}</span>
-      </div>
-      <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: var(--primary);">${escapeHtml(msg.subject)}</div>
-      <div style="font-size: 0.82rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(msg.intro)}</div>
-    `;
+    const senderInitial = (msg.from || "M").charAt(0).toUpperCase();
 
-    card.addEventListener("mouseenter", () => {
-      card.style.borderColor = "var(--primary)";
-      card.style.transform = "translateY(-1px)";
-    });
-    card.addEventListener("mouseleave", () => {
-      card.style.borderColor = "var(--border-color)";
-      card.style.transform = "none";
-    });
+    card.innerHTML = `
+      <div class="email-avatar">${escapeHtml(senderInitial)}</div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-weight: 700; font-size: 0.88rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(msg.from)}</span>
+          <span style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 600; margin-left: 8px;">${timeStr}</span>
+        </div>
+        <div style="font-weight: 800; font-size: 0.92rem; margin-bottom: 4px; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(msg.subject)}</div>
+        <div style="font-size: 0.8rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">${escapeHtml(msg.intro)}</div>
+      </div>
+    `;
 
     card.addEventListener("click", () => openReadMessageModal(msg));
     container.appendChild(card);

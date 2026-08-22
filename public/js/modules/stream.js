@@ -190,28 +190,26 @@ function renderMovieGrid(items) {
   if (!container) return;
 
   if (!items || items.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--text-secondary);">Tidak ada film ditemukan.</div>`;
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary); font-weight: 600;">Tidak ada film ditemukan.</div>`;
     return;
   }
 
   container.innerHTML = items
     .map((item) => `
-      <div class="movie-card media-card" data-id="${item.id}" data-type="${item.type}" style="padding: 0; overflow: hidden; cursor: pointer; position: relative; border-radius: 14px; transition: all 0.2s ease;">
-        <div style="aspect-ratio: 2/3; width: 100%; background: var(--surface); position: relative; overflow: hidden;">
+      <div class="movie-card" data-id="${item.id}" data-type="${item.type}">
+        <div class="movie-card-poster-box">
           ${
             item.poster
-              ? `<img src="${item.poster}" alt="${escapeHtml(item.title)}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" />`
-              : `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-secondary);">No Poster</div>`
+              ? `<img src="${item.poster}" alt="${escapeHtml(item.title)}" loading="lazy" />`
+              : `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-secondary); font-weight:700; font-size:0.8rem;">NO POSTER</div>`
           }
-          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.75); color: #f59e0b; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 800; backdrop-filter: blur(4px);">
-            ⭐ ${escapeHtml(item.rating)}
-          </div>
-          <div style="position: absolute; top: 8px; left: 8px; background: var(--primary); color: var(--on-primary); padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase;">
-            ${escapeHtml(item.type)}
-          </div>
+          <div class="movie-card-overlay"></div>
+          <div class="movie-rating-badge">⭐ ${escapeHtml(item.rating)}</div>
+          <div class="movie-type-badge">${escapeHtml(item.type.toUpperCase())}</div>
         </div>
-        <div style="padding: 10px 12px;">
-          <h4 style="font-size: 0.88rem; font-weight: 700; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(item.title)}</h4>
+        <div class="movie-card-info">
+          <h4 class="movie-card-title">${escapeHtml(item.title)}</h4>
+          <div class="movie-card-year">${escapeHtml(item.year)}</div>
         </div>
       </div>
     `)
