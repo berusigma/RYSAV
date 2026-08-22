@@ -322,12 +322,29 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>'"]/g, (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[tag] || tag));
 }
 
-function parseUrls(text) {
-  if (!text) return "";
+function formatEmailBody(detail) {
+  if (!detail) return "Tidak ada pesan.";
+
+  if (detail.html && detail.html.length > 0) {
+    const rawHtml = Array.isArray(detail.html) ? detail.html.join("") : detail.html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, "text/html");
+    doc.querySelectorAll("a").forEach((a) => {
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+      a.style.color = "var(--primary)";
+      a.style.fontWeight = "700";
+      a.style.textDecoration = "underline";
+      a.style.wordBreak = "break-all";
+    });
+    return doc.body.innerHTML;
+  }
+
+  const text = detail.text || detail.intro || "";
   let safe = escapeHtml(text);
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return safe.replace(urlRegex, (url) => {
-    return `<div class="url-box" style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; word-break: break-all;"><a href="${url}" target="_blank" style="color: var(--primary); font-weight: 700;">${url}</a><button class="btn-copy-url btn-action" data-url="${url}" style="padding: 4px 10px; font-size: 0.72rem;">Salin Link</button></div>`;
+    return `<div class="url-box" style="background: var(--bg-color); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 10px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; word-break: break-all;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: 700;">${url}</a><button class="btn-copy-url btn-action" data-url="${url}" style="padding: 4px 10px; font-size: 0.72rem;">Salin Link</button></div>`;
   }).replace(/\n/g, "<br>");
 }
 
@@ -348,18 +365,17 @@ export async function openReadMessageModal(msg) {
   modal.classList.remove("hidden");
 
   try {
-    let fullText = msg.intro || "";
+    let detailData = { intro: msg.intro || "" };
     if (currentToken) {
       const res = await fetch(`${MAIL_API}/messages/${msg.id}`, {
         headers: { Authorization: `Bearer ${currentToken}` },
       });
       if (res.ok) {
-        const detail = await res.json();
-        fullText = detail.text || (detail.html ? detail.html.join("\n") : fullText);
+        detailData = await res.json();
       }
     }
 
-    bodyEl.innerHTML = parseUrls(fullText);
+    bodyEl.innerHTML = formatEmailBody(detailData);
 
     bodyEl.querySelectorAll(".btn-copy-url").forEach((btn) => {
       btn.addEventListener("click", (e) => {

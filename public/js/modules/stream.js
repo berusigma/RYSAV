@@ -9,7 +9,7 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 
 const SERVERS = {
   vidsrc: {
-    name: "Server 1 (VidSrc)",
+    name: "Server 1 (VidSrc.me)",
     movie: "https://vidsrc.me/embed/movie?tmdb={id}",
     tv: "https://vidsrc.me/embed/tv?tmdb={id}&season={s}&episode={e}",
   },
@@ -22,6 +22,21 @@ const SERVERS = {
     name: "Server 3 (VidSrc Pro)",
     movie: "https://vidsrc.pro/embed/movie/{id}",
     tv: "https://vidsrc.pro/embed/tv/{id}/{s}/{e}",
+  },
+  autoembed: {
+    name: "Server 4 (AutoEmbed CC)",
+    movie: "https://player.autoembed.cc/embed/movie/{id}",
+    tv: "https://player.autoembed.cc/embed/tv/{id}/{s}/{e}",
+  },
+  embedcc: {
+    name: "Server 5 (2Embed CC)",
+    movie: "https://www.2embed.cc/embed/{id}",
+    tv: "https://www.2embed.cc/embedtv/{id}&s={s}&e={e}",
+  },
+  vidsrcxyz: {
+    name: "Server 6 (VidSrc XYZ)",
+    movie: "https://vidsrc.xyz/embed/movie?tmdb={id}",
+    tv: "https://vidsrc.xyz/embed/tv?tmdb={id}&season={s}&episode={e}",
   },
 };
 
@@ -254,25 +269,33 @@ function renderMovieDetail(d) {
       <iframe id="streamIframe" src="${defaultStreamUrl}" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
     </div>
 
-    <!-- Server & Episode Selectors -->
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-      <div style="flex: 1; min-width: 140px;">
-        <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Pilih Server:</label>
-        <select id="streamServerSelect" class="custom-select-input" style="padding: 8px 12px; font-size: 0.8rem;">
-          <option value="vidsrc">Server 1 (VidSrc)</option>
+    <!-- Server & Episode Selectors + Reload Action -->
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end;">
+      <div style="flex: 1; min-width: 150px;">
+        <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Pilih Server Stream:</label>
+        <select id="streamServerSelect" class="custom-select-input" style="padding: 8px 12px; font-size: 0.8rem; width: 100%;">
+          <option value="vidsrc">Server 1 (VidSrc.me)</option>
           <option value="embedsu">Server 2 (Embed.su)</option>
           <option value="vidsrcpro">Server 3 (VidSrc Pro)</option>
+          <option value="autoembed">Server 4 (AutoEmbed CC)</option>
+          <option value="embedcc">Server 5 (2Embed CC)</option>
+          <option value="vidsrcxyz">Server 6 (VidSrc XYZ)</option>
         </select>
       </div>
+
+      <button id="btnReloadPlayer" class="btn-action" style="padding: 8px 12px; font-size: 0.75rem;" title="Reset Player / Refresh Embed">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        Re-Play
+      </button>
 
       ${
         d.type === "tv"
           ? `
-        <div style="width: 90px;">
+        <div style="width: 80px;">
           <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Season:</label>
           <input type="number" id="streamSeasonInput" value="1" min="1" max="${d.seasons || 10}" class="custom-text-input" style="padding: 8px; font-size: 0.85rem; text-align: center;" />
         </div>
-        <div style="width: 90px;">
+        <div style="width: 80px;">
           <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Episode:</label>
           <input type="number" id="streamEpisodeInput" value="1" min="1" max="${d.episodes || 100}" class="custom-text-input" style="padding: 8px; font-size: 0.85rem; text-align: center;" />
         </div>
@@ -348,6 +371,10 @@ function renderMovieDetail(d) {
   document.getElementById("streamServerSelect")?.addEventListener("change", updateIframeSrc);
   document.getElementById("streamSeasonInput")?.addEventListener("change", updateIframeSrc);
   document.getElementById("streamEpisodeInput")?.addEventListener("change", updateIframeSrc);
+  document.getElementById("btnReloadPlayer")?.addEventListener("click", () => {
+    updateIframeSrc();
+    showToast("Player diperbarui!");
+  });
 }
 
 function escapeHtml(str) {
