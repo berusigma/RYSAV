@@ -52,6 +52,7 @@ import {
 import { initTempMailEvents, fetchInboxMessages } from "./modules/tempmail.js";
 import { initNikParserEvents } from "./modules/nikparser.js";
 import { initStreamEvents, loadTrendingMovies } from "./modules/stream.js";
+import { initHdImageEvents } from "./modules/hdimager.js";
 
 // imports for side effects (settings UI, history, modals, update, intents, download)
 import "./modules/settings.js";
@@ -64,6 +65,7 @@ import "./modules/download.js";
 initTempMailEvents();
 initNikParserEvents();
 initStreamEvents();
+initHdImageEvents();
 
 // Batch Mode Toggle
 if (batchToggleBtn) {
