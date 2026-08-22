@@ -483,8 +483,8 @@
           <!-- Tools Main Menu -->
           <div id="toolsMainMenu">
             <div class="page-header">
-              <h2>Tools & Utilities</h2>
-              <p>Fitur & Alat Bantu Tambahan RYSAV</p>
+              <h2 data-i18n="tools-header">Tools & Utilities</h2>
+              <p data-i18n="tools-desc">Fitur & Alat Bantu Tambahan RYSAV</p>
             </div>
 
             <div class="tools-menu-grid" style="display: flex; flex-direction: column; gap: 14px;">
@@ -499,10 +499,10 @@
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: 1.05rem; font-weight: 700;">Temp Mail</h3>
+                    <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="tool-tempmail-title">Temp Mail</h3>
                     <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
                   </div>
-                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Buat email sementara instan / custom username. Dilengkapi notifikasi real-time & multi-server.</p>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="tool-tempmail-desc">Buat email sementara instan dengan notifikasi real-time</p>
                 </div>
               </div>
 
@@ -515,10 +515,10 @@
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: 1.05rem; font-weight: 700;">NIK KTP Parser</h3>
+                    <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="tool-nikparser-title">NIK KTP Parser</h3>
                     <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
                   </div>
-                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Pemeriksaan 16-digit NIK KTP Indonesia, lokasi provinsi/kabupaten/kecamatan, weton Jawa, dan zodiak.</p>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="tool-nikparser-desc">Pemeriksaan 16-digit NIK KTP Indonesia, lokasi wilayah, dan zodiak</p>
                 </div>
               </div>
 
@@ -538,10 +538,10 @@
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: 1.05rem; font-weight: 700;">Stream Film & Series</h3>
+                    <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="tool-stream-title">Stream Film & Series</h3>
                     <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
                   </div>
-                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Nonton film & TV series gratis sub Indo (LK21 / TMDB). Dilengkapi player embed multi-server.</p>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="tool-stream-desc">Nonton film & TV series gratis sub Indo (LK21 / TMDB)</p>
                 </div>
               </div>
 
@@ -554,10 +554,10 @@
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: 1.05rem; font-weight: 700;">HD Image Upscaler</h3>
+                    <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="tool-hdimage-title">HD Image Upscaler</h3>
                     <span style="font-size: 1.1rem; color: var(--text-secondary);">➔</span>
                   </div>
-                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">Tingkatkan kualitas foto dari galeri ke HD/4K dengan AI. Hasil otomatis terunduh.</p>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="tool-hdimage-desc">Tingkatkan kualitas foto dari galeri ke HD/4K dengan AI</p>
                 </div>
               </div>
             </div>
@@ -568,7 +568,7 @@
             <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
               <button class="back-to-tools-btn btn-action" style="padding: 8px 14px;">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Kembali ke Tools
+                <span data-i18n="btn-back-to-tools">Kembali ke Tools</span>
               </button>
               <h2 style="font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">RAY.MAIL</h2>
             </div>
@@ -577,7 +577,7 @@
             <div class="media-card" style="padding: 18px; margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                 <div>
-                  <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px;">Alamat Email Aktif</span>
+                  <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px;" data-i18n="tempmail-active-label">Alamat Email Aktif</span>
                   <div id="tempActiveEmailDisplay" style="font-size: 0.95rem; font-weight: 700; font-family: 'Space Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; color: var(--primary);">
                     Belum Ada Email Aktif
                   </div>
@@ -589,25 +589,25 @@
               <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                 <button id="btnCopyActiveEmail" class="btn-action" style="flex: 1;">
                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                  Salin
+                  <span data-i18n="btn-copy">Salin</span>
                 </button>
                 <button id="btnDeleteActiveEmail" class="btn-action danger" style="flex: 1;">
                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                  Hapus
+                  <span data-i18n="btn-delete">Hapus</span>
                 </button>
               </div>
 
               <!-- Generate Email Button -->
               <button id="btnCreateEmail" class="btn-primary-main">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                Generate Email Baru
+                <span data-i18n="btn-generate-email">Generate Email Baru</span>
               </button>
             </div>
 
             <!-- Account Switcher -->
             <div class="media-card" style="padding: 16px 20px; margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Riwayat Email Tersimpan</span>
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;" data-i18n="tempmail-saved-label">Riwayat Email Tersimpan</span>
                 <button id="btnRefreshHistoryList" class="btn-action" style="padding: 4px 8px; font-size: 0.7rem;">
                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                 </button>
@@ -621,7 +621,7 @@
             <div class="media-card" style="margin-bottom: 16px; padding: 20px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                 <svg class="icon" style="color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
-                <span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Login Email Terdaftar</span>
+                <span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;" data-i18n="tempmail-login-label">Login Email Terdaftar</span>
               </div>
               <div class="email-login-form">
                 <input type="email" id="tempManualLoginInput" placeholder="alamat@mail.tm" />
@@ -654,12 +654,15 @@
           <!-- Tool Sub-Page: NIK Parser -->
           <div id="toolsNikParser" class="tools-sub-page hidden">
             <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-              <button class="back-to-tools-btn secondary-btn btn-sm" style="padding: 8px 14px; border-radius: 12px;">← Back to Tools</button>
+              <button class="back-to-tools-btn btn-action" style="padding: 8px 14px;">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span data-i18n="btn-back-to-tools">Kembali ke Tools</span>
+              </button>
               <h2 style="font-size: 1.2rem; font-weight: 700;">NIK KTP Parser</h2>
             </div>
 
             <div class="media-card" style="padding: 20px; margin-bottom: 16px;">
-              <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 8px;">
+              <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 8px;" data-i18n="nikparser-input-label">
                 Masukkan 16 Digit NIK KTP:
               </label>
               <div style="display: flex; gap: 8px; margin-bottom: 12px;">
@@ -668,12 +671,13 @@
                   id="nikInput"
                   class="custom-text-input"
                   placeholder="Contoh: 3201010101000001"
+                  data-i18n-placeholder="nikparser-input-placeholder"
                   maxlength="16"
                   style="flex: 1; font-weight: 700; font-family: 'Space Mono', monospace; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-main);"
                 />
                 <button id="btnNikPaste" class="secondary-btn" title="Paste NIK">Paste</button>
               </div>
-              <button id="btnNikParse" class="primary-btn" style="width: 100%;">
+              <button id="btnNikParse" class="primary-btn" style="width: 100%;" data-i18n="btn-parse-nik">
                 Parse & Analisis NIK
               </button>
             </div>
@@ -693,7 +697,7 @@
             <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
               <button class="back-to-tools-btn btn-action" style="padding: 8px 14px;">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Kembali ke Tools
+                <span data-i18n="btn-back-to-tools">Kembali ke Tools</span>
               </button>
               <h2 style="font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">STREAM FILM & SERIES</h2>
             </div>
@@ -701,7 +705,7 @@
             <!-- SEARCH BAR -->
             <div class="media-card" style="padding: 16px; margin-bottom: 20px;">
               <div style="display: flex; gap: 8px;">
-                <input type="text" id="streamSearchInput" class="custom-text-input" placeholder="Cari film atau serial TV (e.g. Avengers)..." style="flex: 1;" />
+                <input type="text" id="streamSearchInput" class="custom-text-input" placeholder="Cari film atau serial TV..." data-i18n-placeholder="stream-search-placeholder" style="flex: 1;" />
                 <button id="btnStreamSearch" class="btn-action">
                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
@@ -725,14 +729,14 @@
             <div class="subpage-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
               <button class="back-to-tools-btn btn-action" style="padding: 8px 14px;">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Kembali ke Tools
+                <span data-i18n="btn-back-to-tools">Kembali ke Tools</span>
               </button>
               <h2 style="font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">HD IMAGE UPSCALER</h2>
             </div>
 
             <!-- FILE UPLOADER CARD -->
             <div class="media-card" style="padding: 20px; margin-bottom: 16px;">
-              <label style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 10px; letter-spacing: 0.5px;">
+              <label style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 10px; letter-spacing: 0.5px;" data-i18n="hdimage-upload-label">
                 Pilih / Unggah Foto dari Galeri:
               </label>
 
@@ -744,8 +748,8 @@
                   <circle cx="8.5" cy="8.5" r="1.5"></circle>
                   <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
-                <p style="font-size: 0.88rem; font-weight: 700;">Klik untuk pilih foto dari galeri</p>
-                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Atau seret dan lepas gambar ke sini</p>
+                <p style="font-size: 0.88rem; font-weight: 700;" data-i18n="hdimage-dropzone-text">Klik untuk pilih foto dari galeri</p>
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="hdimage-dropzone-sub">Atau seret dan lepas gambar ke sini</p>
               </div>
 
               <!-- PREVIEW CONTAINER -->
@@ -757,14 +761,14 @@
               <!-- OPTIONS -->
               <div style="display: flex; gap: 10px; margin-top: 16px;">
                 <div style="flex: 1;">
-                  <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Skala Upscale:</label>
+                  <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;" data-i18n="hdimage-scale-label">Skala Upscale:</label>
                   <select id="hdImageScaleSelect" class="custom-select-input">
                     <option value="2">2x (HD Super Sharp)</option>
                     <option value="4">4x (Ultra HD 4K)</option>
                   </select>
                 </div>
                 <div style="flex: 1;">
-                  <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Mode AI:</label>
+                  <label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;" data-i18n="hdimage-mode-label">Mode AI:</label>
                   <select id="hdImageModeSelect" class="custom-select-input">
                     <option value="photo">Foto Realistis</option>
                     <option value="anime">Anime / Ilustrasi</option>
@@ -774,7 +778,7 @@
 
               <button id="btnHdImageSubmit" class="btn-primary-main" style="margin-top: 16px;">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                Tingkatkan ke HD (Upscale)
+                <span data-i18n="btn-upscale-hd">Tingkatkan ke HD (Upscale)</span>
               </button>
             </div>
 
